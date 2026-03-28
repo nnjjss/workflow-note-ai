@@ -38,6 +38,9 @@ export interface GenerateResponse {
   today_work?: string[]
   outcomes?: string[]
   blockers?: string[]
+  // share summaries
+  share_summary_email?: string
+  share_summary_slack?: string
 }
 
 export interface RewriteRequest {
@@ -50,4 +53,9 @@ export interface RewriteRequest {
 export interface RewriteResponse {
   section: string
   content: string[]
+}
+
+export interface ShareResponse {
+  success: boolean
+  message: string
 }

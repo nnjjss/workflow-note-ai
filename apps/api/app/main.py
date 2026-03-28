@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import generate, rewrite, documents, health
+from app.routers.share import router as share_router
 
 app = FastAPI(title="WorkFlow Note AI API")
 
@@ -17,3 +18,4 @@ app.include_router(health.router)
 app.include_router(generate.router)
 app.include_router(rewrite.router)
 app.include_router(documents.router)
+app.include_router(share_router)

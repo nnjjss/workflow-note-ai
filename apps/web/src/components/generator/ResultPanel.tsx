@@ -132,7 +132,7 @@ export default function ResultPanel({ result, loading }: ResultPanelProps) {
       <Card className="border-zinc-200 shadow-sm">
         <CardContent className="p-5">
           <h3 className="mb-3 text-sm font-semibold text-zinc-800">공유</h3>
-          <SharePanel result={result} />
+          <SharePanel result={result} title={result.title} />
         </CardContent>
       </Card>
     </div>
