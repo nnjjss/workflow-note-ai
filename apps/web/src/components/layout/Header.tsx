@@ -4,6 +4,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
+const NAV_ITEMS = [
+  { href: "/generator", label: "시작하기" },
+  { href: "/history", label: "히스토리" },
+  { href: "/settings", label: "설정" },
+]
+
 export default function Header() {
   const pathname = usePathname()
 
@@ -13,23 +19,17 @@ export default function Header() {
         <Link href="/" className="text-lg font-bold text-zinc-900">
           WorkFlow Note AI
         </Link>
-        <nav className="flex items-center gap-2">
-          <Link href="/generator">
-            <Button
-              variant={pathname === "/generator" ? "default" : "ghost"}
-              size="sm"
-            >
-              시작하기
-            </Button>
-          </Link>
-          <Link href="/history">
-            <Button
-              variant={pathname === "/history" ? "default" : "ghost"}
-              size="sm"
-            >
-              히스토리
-            </Button>
-          </Link>
+        <nav className="flex items-center gap-1">
+          {NAV_ITEMS.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Button
+                variant={pathname === item.href ? "default" : "ghost"}
+                size="sm"
+              >
+                {item.label}
+              </Button>
+            </Link>
+          ))}
         </nav>
       </div>
     </header>

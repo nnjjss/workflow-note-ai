@@ -6,6 +6,7 @@ import InputPanel from "@/components/generator/InputPanel"
 import ResultPanel from "@/components/generator/ResultPanel"
 import { generateDocument, saveDocument, getDocument } from "@/lib/api"
 import { DocType, GenerateResponse } from "@/lib/types"
+import { getOrCreateDemoUser } from "@/lib/auth"
 
 function GeneratorContent() {
   const searchParams = useSearchParams()
@@ -44,6 +45,10 @@ function GeneratorContent() {
     } catch {
       // silent fail for loading
     }
+  }, [])
+
+  useEffect(() => {
+    getOrCreateDemoUser()
   }, [])
 
   useEffect(() => {
