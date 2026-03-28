@@ -11,6 +11,7 @@ from app.prompts.meeting_note import MEETING_NOTE_SYSTEM, MEETING_NOTE_USER
 from app.prompts.weekly_report import WEEKLY_REPORT_SYSTEM, WEEKLY_REPORT_USER
 from app.prompts.daily_log import DAILY_LOG_SYSTEM, DAILY_LOG_USER
 from app.prompts.rewrite import REWRITE_PROMPTS, REWRITE_SYSTEM
+from app.services.generation_log import generation_log_service
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +100,17 @@ class AnthropicProvider(AIProvider):
         raw_text = response.content[0].text
         result = _parse_json_response(raw_text)
         result["doc_type"] = doc_type
+
+        generation_log_service.log(
+            model_provider="anthropic",
+            model_name=MODEL,
+            prompt_version="v1.0",
+            doc_type=doc_type,
+            mode="generate",
+            status="success",
+            latency_ms=int(elapsed * 1000),
+        )
+
         return result
 
     def rewrite_section(self, content: str, mode: str) -> str:
@@ -114,6 +126,16 @@ class AnthropicProvider(AIProvider):
         )
         elapsed = time.time() - start
         logger.info(f"AI rewrite took {elapsed:.2f}s for mode={mode}")
+
+        generation_log_service.log(
+            model_provider="anthropic",
+            model_name=MODEL,
+            prompt_version="v1.0",
+            doc_type="rewrite",
+            mode=f"rewrite:{mode}",
+            status="success",
+            latency_ms=int(elapsed * 1000),
+        )
 
         return response.content[0].text
 

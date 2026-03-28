@@ -1,4 +1,4 @@
-import { GenerateRequest, GenerateResponse, RewriteRequest, RewriteResponse, ShareResponse } from "./types"
+import { GenerateRequest, GenerateResponse, RewriteRequest, RewriteResponse, ShareResponse, DocumentResponse } from "./types"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
@@ -57,4 +57,68 @@ export async function shareToEmail(data: {
   })
   if (!res.ok) throw new Error("이메일 발송에 실패했습니다")
   return res.json()
+}
+
+export async function rewriteSectionContent(data: {
+  content: string
+  mode: "shorter" | "formal" | "manager_tone" | "team_tone"
+  doc_type?: string
+}): Promise<{ rewritten: string }> {
+  const res = await fetch(`${API_BASE}/api/rewrite`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) throw new Error("리라이트에 실패했습니다")
+  return res.json()
+}
+
+export async function saveDocument(data: {
+  title: string
+  doc_type: string
+  raw_input: string
+  metadata?: Record<string, unknown>
+  generated_output?: Record<string, unknown>
+  short_summary?: string
+}): Promise<DocumentResponse> {
+  const res = await fetch(`${API_BASE}/api/documents`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) throw new Error("저장에 실패했습니다")
+  return res.json()
+}
+
+export async function getDocuments(params?: {
+  doc_type?: string
+  q?: string
+  page?: number
+  per_page?: number
+}): Promise<{ items: DocumentResponse[]; total: number; page: number; per_page: number }> {
+  const searchParams = new URLSearchParams()
+  if (params?.doc_type) searchParams.set("doc_type", params.doc_type)
+  if (params?.q) searchParams.set("q", params.q)
+  if (params?.page) searchParams.set("page", String(params.page))
+  if (params?.per_page) searchParams.set("per_page", String(params.per_page))
+  const res = await fetch(`${API_BASE}/api/documents?${searchParams}`)
+  if (!res.ok) throw new Error("문서 목록 조회에 실패했습니다")
+  return res.json()
+}
+
+export async function getDocument(id: string): Promise<DocumentResponse> {
+  const res = await fetch(`${API_BASE}/api/documents/${id}`)
+  if (!res.ok) throw new Error("문서 조회에 실패했습니다")
+  return res.json()
+}
+
+export async function duplicateDocument(id: string): Promise<DocumentResponse> {
+  const res = await fetch(`${API_BASE}/api/documents/${id}/duplicate`, { method: "POST" })
+  if (!res.ok) throw new Error("복제에 실패했습니다")
+  return res.json()
+}
+
+export async function deleteDocument(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/documents/${id}`, { method: "DELETE" })
+  if (!res.ok) throw new Error("삭제에 실패했습니다")
 }

@@ -22,3 +22,10 @@ class DocumentUpdate(BaseModel):
     title: Optional[str] = None
     generated_output: Optional[dict] = None
     short_summary: Optional[str] = None
+
+
+class DocumentListResponse(BaseModel):
+    items: list[DocumentResponse]
+    total: int
+    page: int
+    per_page: int

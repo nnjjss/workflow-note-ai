@@ -59,3 +59,15 @@ export interface ShareResponse {
   success: boolean
   message: string
 }
+
+export interface DocumentResponse {
+  id: string
+  title: string
+  doc_type: string
+  raw_input: string
+  metadata: Record<string, unknown>
+  generated_output: Record<string, unknown>
+  short_summary: string
+  created_at: string
+  updated_at: string
+}

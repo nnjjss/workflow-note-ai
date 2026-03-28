@@ -1,12 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState, useEffect, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import InputPanel from "@/components/generator/InputPanel"
 import ResultPanel from "@/components/generator/ResultPanel"
-import { generateDocument } from "@/lib/api"
+import { generateDocument, saveDocument, getDocument } from "@/lib/api"
 import { DocType, GenerateResponse } from "@/lib/types"
 
-export default function GeneratorPage() {
+function GeneratorContent() {
+  const searchParams = useSearchParams()
+  const docId = searchParams.get("id")
+
   const [docType, setDocType] = useState<DocType>("meeting_note")
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -19,6 +23,34 @@ export default function GeneratorPage() {
   const [result, setResult] = useState<GenerateResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const loadDocument = useCallback(async (id: string) => {
+    try {
+      const doc = await getDocument(id)
+      setTitle(doc.title)
+      setDocType(doc.doc_type as DocType)
+      setContent(doc.raw_input)
+      if (doc.metadata) {
+        setMetadata({
+          team: (doc.metadata.team as string) || "",
+          project: (doc.metadata.project as string) || "",
+          attendees: (doc.metadata.attendees as string) || "",
+          date: (doc.metadata.date as string) || "",
+        })
+      }
+      if (doc.generated_output) {
+        setResult(doc.generated_output as unknown as GenerateResponse)
+      }
+    } catch {
+      // silent fail for loading
+    }
+  }, [])
+
+  useEffect(() => {
+    if (docId) {
+      loadDocument(docId)
+    }
+  }, [docId, loadDocument])
 
   const handleGenerate = async () => {
     if (!content.trim()) return
@@ -40,6 +72,25 @@ export default function GeneratorPage() {
         },
       })
       setResult(response)
+
+      // Auto-save after generation
+      try {
+        await saveDocument({
+          title: title || response.title,
+          doc_type: docType,
+          raw_input: content,
+          metadata: {
+            team: metadata.team,
+            project: metadata.project,
+            attendees: metadata.attendees,
+            date: metadata.date,
+          },
+          generated_output: response as unknown as Record<string, unknown>,
+          short_summary: response.summary,
+        })
+      } catch {
+        /* silent fail for auto-save */
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "생성에 실패했습니다. 다시 시도해주세요.")
     } finally {
@@ -82,5 +133,21 @@ export default function GeneratorPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function GeneratorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-5xl px-4 py-8">
+          <div className="flex min-h-[300px] items-center justify-center">
+            <p className="text-sm text-zinc-400">로딩 중...</p>
+          </div>
+        </div>
+      }
+    >
+      <GeneratorContent />
+    </Suspense>
   )
 }
