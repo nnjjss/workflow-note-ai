@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -17,6 +19,6 @@ class DocumentResponse(DocumentCreate):
 
 
 class DocumentUpdate(BaseModel):
-    title: str | None = None
-    generated_output: dict | None = None
-    short_summary: str | None = None
+    title: Optional[str] = None
+    generated_output: Optional[dict] = None
+    short_summary: Optional[str] = None
