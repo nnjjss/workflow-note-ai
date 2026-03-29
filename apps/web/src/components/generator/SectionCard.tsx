@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { rewriteSectionContent } from "@/lib/api"
+import { Loader2, Undo2, Pencil } from "lucide-react"
 
 interface SectionCardProps {
   title: string
@@ -78,110 +78,96 @@ export default function SectionCard({
   }
 
   return (
-    <Card className="border-zinc-200 shadow-sm">
-      <CardContent className="p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-800">{title}</h3>
-          <div className="flex items-center gap-2">
-            {previousItems && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleUndo}
-                className="h-7 text-xs text-blue-500 hover:text-blue-700"
-              >
-                되돌리기
-              </Button>
-            )}
-            {editable && !editing && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleEdit}
-                className="h-7 text-xs text-zinc-400 hover:text-zinc-600"
-              >
-                편집
-              </Button>
-            )}
+    <div className="card-base p-5 animate-fade-in">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">{title}</h3>
+        <div className="flex items-center gap-2">
+          {previousItems && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleUndo}
+              className="h-7 text-xs text-blue-600 hover:text-blue-800 gap-1"
+            >
+              <Undo2 className="h-3.5 w-3.5" />
+              되돌리기
+            </Button>
+          )}
+          {editable && !editing && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleEdit}
+              className="h-7 text-xs text-zinc-400 hover:text-zinc-600 gap-1"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              편집
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {editing ? (
+        <div className="space-y-3">
+          <Textarea
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            rows={Math.max(3, items.length)}
+            className="resize-y input-focus text-sm"
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCancel}
+              className="h-8 text-xs rounded-lg border-zinc-200"
+            >
+              취소
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              className="h-8 bg-blue-600 text-xs text-white hover:bg-blue-700 rounded-lg btn-press"
+            >
+              저장
+            </Button>
           </div>
         </div>
+      ) : (
+        <>
+          <ul className="space-y-1.5">
+            {items.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-zinc-600">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+                {item}
+              </li>
+            ))}
+          </ul>
 
-        {editing ? (
-          <div className="space-y-2">
-            <Textarea
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              rows={Math.max(3, items.length)}
-              className="resize-y border-zinc-200 text-sm"
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={handleCancel} className="h-7 text-xs">
-                취소
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleSave}
-                className="h-7 bg-blue-600 text-xs text-white hover:bg-blue-700"
-              >
-                저장
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <>
-            <ul className="space-y-1.5">
-              {items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-zinc-600">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-300" />
-                  {item}
-                </li>
+          {rewritable && !editing && (
+            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-zinc-100 pt-3">
+              {REWRITE_MODES.map(({ mode, label }) => (
+                <button
+                  key={mode}
+                  type="button"
+                  disabled={rewritingMode !== null}
+                  onClick={() => handleRewrite(mode)}
+                  className="rounded-full px-3 py-1.5 text-xs font-medium border border-zinc-200 bg-zinc-50 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-zinc-500"
+                >
+                  {rewritingMode === mode ? (
+                    <span className="flex items-center gap-1">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      {label}
+                    </span>
+                  ) : (
+                    label
+                  )}
+                </button>
               ))}
-            </ul>
-
-            {rewritable && !editing && (
-              <div className="mt-3 flex flex-wrap gap-1.5 border-t border-zinc-100 pt-3">
-                {REWRITE_MODES.map(({ mode, label }) => (
-                  <Button
-                    key={mode}
-                    variant="outline"
-                    size="xs"
-                    disabled={rewritingMode !== null}
-                    onClick={() => handleRewrite(mode)}
-                    className="text-xs text-zinc-500 hover:text-zinc-700"
-                  >
-                    {rewritingMode === mode ? (
-                      <span className="flex items-center gap-1">
-                        <svg
-                          className="h-3 w-3 animate-spin"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                          />
-                        </svg>
-                        {label}
-                      </span>
-                    ) : (
-                      label
-                    )}
-                  </Button>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </CardContent>
-    </Card>
+            </div>
+          )}
+        </>
+      )}
+    </div>
   )
 }

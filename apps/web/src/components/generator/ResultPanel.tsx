@@ -1,10 +1,10 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
 import { GenerateResponse } from "@/lib/types"
 import SectionCard from "./SectionCard"
 import ActionItems from "./ActionItems"
 import SharePanel from "./SharePanel"
+import { FileText } from "lucide-react"
 
 interface ResultPanelProps {
   result: GenerateResponse | null
@@ -14,61 +14,55 @@ interface ResultPanelProps {
 export default function ResultPanel({ result, loading }: ResultPanelProps) {
   if (loading) {
     return (
-      <Card className="border-zinc-200 shadow-sm">
-        <CardContent className="flex min-h-[300px] items-center justify-center p-6">
-          <div className="flex flex-col items-center gap-3">
-            <svg
-              className="h-8 w-8 animate-spin text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-              />
-            </svg>
-            <p className="text-sm text-zinc-500">문서를 생성하고 있습니다...</p>
+      <div className="card-base p-6">
+        <div className="min-h-[300px] space-y-6">
+          {/* Skeleton title */}
+          <div className="space-y-3">
+            <div className="skeleton h-6 w-3/4" />
+            <div className="skeleton h-4 w-1/2" />
           </div>
-        </CardContent>
-      </Card>
+          {/* Skeleton content blocks */}
+          <div className="space-y-3">
+            <div className="skeleton h-4 w-full" />
+            <div className="skeleton h-4 w-5/6" />
+            <div className="skeleton h-4 w-4/6" />
+          </div>
+          <div className="space-y-3">
+            <div className="skeleton h-4 w-full" />
+            <div className="skeleton h-4 w-3/4" />
+          </div>
+          <p className="text-center text-sm text-zinc-400 pt-4">문서를 생성하고 있습니다...</p>
+        </div>
+      </div>
     )
   }
 
   if (!result) {
     return (
-      <Card className="border-zinc-200 shadow-sm">
-        <CardContent className="flex min-h-[300px] items-center justify-center p-6">
-          <p className="text-sm text-zinc-400">문서를 생성하면 여기에 결과가 표시됩니다</p>
-        </CardContent>
-      </Card>
+      <div className="card-base p-6">
+        <div className="flex min-h-[300px] flex-col items-center justify-center gap-4">
+          <FileText className="h-12 w-12 text-zinc-200" />
+          <div className="text-center">
+            <p className="text-sm font-medium text-zinc-400">아직 생성된 문서가 없습니다</p>
+            <p className="mt-1 text-xs text-zinc-300">왼쪽에서 내용을 입력하고 문서를 생성해보세요</p>
+          </div>
+        </div>
+      </div>
     )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Title */}
-      <Card className="border-zinc-200 shadow-sm">
-        <CardContent className="p-5">
-          <h2 className="text-lg font-bold text-zinc-900">{result.title}</h2>
-        </CardContent>
-      </Card>
+      <div className="animate-fade-in rounded-xl border border-blue-200 bg-blue-50 p-5">
+        <h2 className="text-lg font-bold text-zinc-900">{result.title}</h2>
+      </div>
 
       {/* Summary */}
-      <Card className="border-zinc-200 shadow-sm">
-        <CardContent className="p-5">
-          <h3 className="mb-2 text-sm font-semibold text-zinc-800">핵심 요약</h3>
-          <p className="text-sm leading-relaxed text-zinc-600">{result.summary}</p>
-        </CardContent>
-      </Card>
+      <div className="card-base p-5 animate-fade-in stagger-1">
+        <h3 className="mb-2 text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">핵심 요약</h3>
+        <p className="text-sm leading-relaxed text-zinc-600">{result.summary}</p>
+      </div>
 
       {/* Key Points */}
       <SectionCard title="주요 포인트" items={result.key_points} editable rewritable docType={result.doc_type} />
@@ -129,12 +123,10 @@ export default function ResultPanel({ result, loading }: ResultPanelProps) {
       )}
 
       {/* Share Panel */}
-      <Card className="border-zinc-200 shadow-sm">
-        <CardContent className="p-5">
-          <h3 className="mb-3 text-sm font-semibold text-zinc-800">공유</h3>
-          <SharePanel result={result} title={result.title} />
-        </CardContent>
-      </Card>
+      <div className="card-base p-5 animate-fade-in">
+        <h3 className="mb-3 text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">공유</h3>
+        <SharePanel result={result} title={result.title} />
+      </div>
     </div>
   )
 }

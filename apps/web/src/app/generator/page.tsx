@@ -7,6 +7,7 @@ import ResultPanel from "@/components/generator/ResultPanel"
 import { generateDocument, saveDocument, getDocument } from "@/lib/api"
 import { DocType, GenerateResponse } from "@/lib/types"
 import { getOrCreateDemoUser } from "@/lib/auth"
+import { Sparkles, AlertCircle, Loader2 } from "lucide-react"
 
 function GeneratorContent() {
   const searchParams = useSearchParams()
@@ -105,16 +106,22 @@ function GeneratorContent() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-zinc-900">문서 생성</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          메모를 입력하면 AI가 구조화된 문서로 정리합니다
-        </p>
+      {/* Page Header */}
+      <div className="mb-6 animate-fade-in">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
+            <Sparkles className="h-5 w-5 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-zinc-900">문서 생성</h1>
+            <p className="text-sm text-zinc-500">메모를 입력하면 AI가 구조화된 문서로 정리합니다</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: Input */}
-        <div>
+        <div className="animate-fade-in stagger-1">
           <InputPanel
             docType={docType}
             setDocType={setDocType}
@@ -128,12 +135,15 @@ function GeneratorContent() {
             loading={loading}
           />
           {error && (
-            <p className="mt-3 text-sm text-red-600">{error}</p>
+            <div className="mt-3 flex items-center gap-2 rounded-lg badge-red px-4 py-3 animate-fade-in">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <p className="text-sm font-medium">{error}</p>
+            </div>
           )}
         </div>
 
         {/* Right: Result */}
-        <div>
+        <div className="animate-fade-in stagger-2">
           <ResultPanel result={result} loading={loading} />
         </div>
       </div>
@@ -146,7 +156,8 @@ export default function GeneratorPage() {
     <Suspense
       fallback={
         <div className="mx-auto max-w-5xl px-4 py-8">
-          <div className="flex min-h-[300px] items-center justify-center">
+          <div className="flex min-h-[300px] flex-col items-center justify-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             <p className="text-sm text-zinc-400">로딩 중...</p>
           </div>
         </div>

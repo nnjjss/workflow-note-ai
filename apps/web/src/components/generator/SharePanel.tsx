@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { GenerateResponse } from "@/lib/types"
 import { shareToSlack, shareToEmail } from "@/lib/api"
+import { Copy, Mail, MessageSquare, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 
 interface SharePanelProps {
   result: GenerateResponse
@@ -217,10 +218,19 @@ export default function SharePanel({ result, title }: SharePanelProps) {
 
   return (
     <Tabs defaultValue="clipboard">
-      <TabsList>
-        <TabsTrigger value="clipboard">클립보드</TabsTrigger>
-        <TabsTrigger value="slack">슬랙</TabsTrigger>
-        <TabsTrigger value="email">이메일</TabsTrigger>
+      <TabsList className="bg-zinc-100 rounded-lg p-1">
+        <TabsTrigger value="clipboard" className="gap-1.5">
+          <Copy className="h-3.5 w-3.5" />
+          클립보드
+        </TabsTrigger>
+        <TabsTrigger value="slack" className="gap-1.5">
+          <MessageSquare className="h-3.5 w-3.5" />
+          슬랙
+        </TabsTrigger>
+        <TabsTrigger value="email" className="gap-1.5">
+          <Mail className="h-3.5 w-3.5" />
+          이메일
+        </TabsTrigger>
       </TabsList>
 
       {/* 클립보드 탭 */}
@@ -230,25 +240,49 @@ export default function SharePanel({ result, title }: SharePanelProps) {
             variant="outline"
             size="sm"
             onClick={() => copyToClipboard(formatFull(result), "full")}
-            className="border-zinc-200 text-zinc-600"
+            className="border-zinc-200 text-zinc-600 gap-1.5"
           >
-            {copied === "full" ? "복사됨!" : "전체 복사"}
+            <Copy className="h-3.5 w-3.5" />
+            {copied === "full" ? (
+              <span className="flex items-center gap-1 text-emerald-600">
+                <CheckCircle className="h-3.5 w-3.5" />
+                복사됨
+              </span>
+            ) : (
+              "전체 복사"
+            )}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => copyToClipboard(formatFull(result), "email")}
-            className="border-zinc-200 text-zinc-600"
+            className="border-zinc-200 text-zinc-600 gap-1.5"
           >
-            {copied === "email" ? "복사됨!" : "이메일용 복사"}
+            <Mail className="h-3.5 w-3.5" />
+            {copied === "email" ? (
+              <span className="flex items-center gap-1 text-emerald-600">
+                <CheckCircle className="h-3.5 w-3.5" />
+                복사됨
+              </span>
+            ) : (
+              "이메일용 복사"
+            )}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => copyToClipboard(formatSlack(result), "slack")}
-            className="border-zinc-200 text-zinc-600"
+            className="border-zinc-200 text-zinc-600 gap-1.5"
           >
-            {copied === "slack" ? "복사됨!" : "슬랙용 복사"}
+            <MessageSquare className="h-3.5 w-3.5" />
+            {copied === "slack" ? (
+              <span className="flex items-center gap-1 text-emerald-600">
+                <CheckCircle className="h-3.5 w-3.5" />
+                복사됨
+              </span>
+            ) : (
+              "슬랙용 복사"
+            )}
           </Button>
         </div>
       </TabsContent>
@@ -257,30 +291,48 @@ export default function SharePanel({ result, title }: SharePanelProps) {
       <TabsContent value="slack">
         <div className="space-y-3 pt-3">
           <div>
-            <label className="mb-1 block text-xs text-zinc-500">Webhook URL</label>
+            <label className="mb-1.5 block text-xs font-medium text-zinc-500">Webhook URL</label>
             <Input
               type="url"
               placeholder="https://hooks.slack.com/services/..."
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
-              className="text-sm"
+              className="text-sm input-focus"
             />
           </div>
           <Button
             size="sm"
             onClick={handleSlackSend}
             disabled={slackLoading || !webhookUrl.trim()}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
           >
-            {slackLoading ? "보내는 중..." : "슬랙으로 보내기"}
+            {slackLoading ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                보내는 중...
+              </>
+            ) : (
+              <>
+                <MessageSquare className="h-3.5 w-3.5" />
+                슬랙으로 보내기
+              </>
+            )}
           </Button>
           {slackStatus && (
-            <p
-              className={`text-xs ${
-                slackStatus.type === "success" ? "text-green-600" : "text-red-600"
+            <div
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${
+                slackStatus.type === "success"
+                  ? "badge-green"
+                  : "badge-red"
               }`}
             >
+              {slackStatus.type === "success" ? (
+                <CheckCircle className="h-3.5 w-3.5" />
+              ) : (
+                <AlertCircle className="h-3.5 w-3.5" />
+              )}
               {slackStatus.message}
-            </p>
+            </div>
           )}
         </div>
       </TabsContent>
@@ -289,30 +341,48 @@ export default function SharePanel({ result, title }: SharePanelProps) {
       <TabsContent value="email">
         <div className="space-y-3 pt-3">
           <div>
-            <label className="mb-1 block text-xs text-zinc-500">받는 사람</label>
+            <label className="mb-1.5 block text-xs font-medium text-zinc-500">받는 사람</label>
             <Input
               type="email"
               placeholder="recipient@example.com"
               value={toEmail}
               onChange={(e) => setToEmail(e.target.value)}
-              className="text-sm"
+              className="text-sm input-focus"
             />
           </div>
           <Button
             size="sm"
             onClick={handleEmailSend}
             disabled={emailLoading || !toEmail.trim()}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
           >
-            {emailLoading ? "보내는 중..." : "이메일로 보내기"}
+            {emailLoading ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                보내는 중...
+              </>
+            ) : (
+              <>
+                <Mail className="h-3.5 w-3.5" />
+                이메일로 보내기
+              </>
+            )}
           </Button>
           {emailStatus && (
-            <p
-              className={`text-xs ${
-                emailStatus.type === "success" ? "text-green-600" : "text-red-600"
+            <div
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${
+                emailStatus.type === "success"
+                  ? "badge-green"
+                  : "badge-red"
               }`}
             >
+              {emailStatus.type === "success" ? (
+                <CheckCircle className="h-3.5 w-3.5" />
+              ) : (
+                <AlertCircle className="h-3.5 w-3.5" />
+              )}
               {emailStatus.message}
-            </p>
+            </div>
           )}
         </div>
       </TabsContent>
