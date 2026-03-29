@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { DocType } from "@/lib/types"
-import { FileText, BarChart3, ClipboardList, ChevronDown, Sparkles, Loader2, Lightbulb } from "lucide-react"
+import { FileText, BarChart3, ClipboardList, ChevronDown, PenLine, Loader2, Lightbulb } from "lucide-react"
 
 const DOC_TYPES: { value: DocType; label: string; icon: React.ReactNode }[] = [
   { value: "meeting_note", label: "회의록", icon: <FileText className="h-4 w-4" /> },
@@ -52,7 +52,7 @@ const EXAMPLE_TEMPLATES = [
   {
     docType: "meeting_note" as DocType,
     label: "회의록 예시",
-    icon: <FileText className="h-5 w-5 text-blue-500" />,
+    icon: <FileText className="h-5 w-5 text-zinc-500" />,
     preview: "마케팅 팀 회의에서 논의한...",
     title: "마케팅 팀 주간 회의",
     content: `참석자: 김팀장, 이대리, 박사원
@@ -77,7 +77,7 @@ const EXAMPLE_TEMPLATES = [
   {
     docType: "weekly_report" as DocType,
     label: "주간보고 예시",
-    icon: <BarChart3 className="h-5 w-5 text-green-500" />,
+    icon: <BarChart3 className="h-5 w-5 text-zinc-500" />,
     preview: "금주 완료 작업: 캠페인 A...",
     title: "3월 4주차 주간보고",
     content: `금주 완료:
@@ -102,7 +102,7 @@ const EXAMPLE_TEMPLATES = [
   {
     docType: "daily_log" as DocType,
     label: "업무일지 예시",
-    icon: <ClipboardList className="h-5 w-5 text-orange-500" />,
+    icon: <ClipboardList className="h-5 w-5 text-zinc-500" />,
     preview: "오늘 진행 사항: 고객 미팅...",
     title: "3월 27일 업무일지",
     content: `오늘 진행 사항:
@@ -196,21 +196,21 @@ export default function InputPanel({
   }
 
   return (
-    <div className="card-elevated p-6">
-      <div className="space-y-6">
+    <div className="border border-zinc-200 rounded-lg bg-white p-5">
+      <div className="space-y-4">
         {/* Doc Type Selector */}
-        <div className="space-y-2.5">
-          <Label className="text-sm font-semibold text-zinc-800">문서 유형</Label>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-zinc-700">문서 유형</Label>
           <div className="flex gap-2">
             {DOC_TYPES.map((dt) => (
               <button
                 key={dt.value}
                 type="button"
                 onClick={() => setDocType(dt.value)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                   docType === dt.value
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-white border border-zinc-200 text-zinc-600 hover:border-blue-300 hover:text-blue-600"
+                    ? "bg-zinc-900 text-white"
+                    : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                 }`}
               >
                 {dt.icon}
@@ -224,8 +224,8 @@ export default function InputPanel({
         <div className="border-t border-zinc-100" />
 
         {/* Title */}
-        <div className="space-y-2.5">
-          <Label htmlFor="title" className="text-sm font-semibold text-zinc-800">
+        <div className="space-y-2">
+          <Label htmlFor="title" className="text-sm font-medium text-zinc-700">
             제목
           </Label>
           <Input
@@ -241,8 +241,8 @@ export default function InputPanel({
         <div className="border-t border-zinc-100" />
 
         {/* Content */}
-        <div className="space-y-2.5">
-          <Label htmlFor="content" className="text-sm font-semibold text-zinc-800">
+        <div className="space-y-2">
+          <Label htmlFor="content" className="text-sm font-medium text-zinc-700">
             메모 · 회의록 · 업무 내용
           </Label>
           <Textarea
@@ -257,14 +257,14 @@ export default function InputPanel({
             {/* Auto-detect suggestion */}
             {detectedType && (
               <div className="flex items-center gap-1.5 animate-fade-in">
-                <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
-                <span className="text-xs text-amber-600">
+                <Lightbulb className="h-3.5 w-3.5 text-zinc-400" />
+                <span className="text-xs text-zinc-500">
                   {DOC_TYPE_LABELS[detectedType]}으로 감지됨
                 </span>
                 <button
                   type="button"
                   onClick={() => { setDocType(detectedType); setDetectedType(null) }}
-                  className="ml-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors"
+                  className="ml-1 rounded px-2 py-0.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors"
                 >
                   적용
                 </button>
@@ -284,14 +284,14 @@ export default function InputPanel({
                   key={tpl.docType}
                   type="button"
                   onClick={() => applyTemplate(tpl)}
-                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-zinc-200 bg-white p-3 text-left transition-all hover:border-blue-300 hover:shadow-sm"
+                  className="group flex flex-col items-start gap-1.5 rounded-lg border border-zinc-200 bg-white p-3 text-left transition-all hover:bg-zinc-50"
                 >
                   <div className="flex items-center gap-1.5">
                     {tpl.icon}
-                    <span className="text-sm font-semibold text-zinc-700">{tpl.label}</span>
+                    <span className="text-sm font-medium text-zinc-700">{tpl.label}</span>
                   </div>
                   <p className="text-xs text-zinc-400 line-clamp-2">&ldquo;{tpl.preview}&rdquo;</p>
-                  <span className="text-xs font-medium text-blue-500 group-hover:text-blue-600">
+                  <span className="text-xs font-medium text-zinc-700 group-hover:text-zinc-900">
                     사용하기
                   </span>
                 </button>
@@ -374,7 +374,7 @@ export default function InputPanel({
         <Button
           onClick={onGenerate}
           disabled={!content.trim() || loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg text-white rounded-xl py-3 text-base font-semibold btn-press disabled:opacity-50"
+          className="w-full bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg py-3 text-base font-semibold btn-press disabled:opacity-50"
         >
           {loading ? (
             <span className="flex items-center gap-2">
@@ -383,9 +383,9 @@ export default function InputPanel({
             </span>
           ) : (
             <span className="flex w-full items-center justify-center gap-2">
-              <Sparkles className="h-5 w-5" />
+              <PenLine className="h-5 w-5" />
               문서 생성하기
-              <kbd className="ml-auto rounded bg-blue-500/30 px-1.5 py-0.5 text-xs font-normal text-blue-100">⌘↵</kbd>
+              <kbd className="ml-auto rounded bg-zinc-700 px-1.5 py-0.5 text-xs font-normal text-zinc-300">⌘↵</kbd>
             </span>
           )}
         </Button>

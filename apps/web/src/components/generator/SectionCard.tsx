@@ -96,14 +96,14 @@ export default function SectionCard({
   }
 
   return (
-    <div className="card-base p-5 animate-fade-in">
+    <div className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in">
       <div className={`${collapsed ? "" : "mb-3"} flex items-center justify-between`}>
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="flex items-center gap-1.5 group"
         >
           <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform duration-200 group-hover:text-zinc-600 ${collapsed ? "-rotate-90" : ""}`} />
-          <h3 className="text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">{title}</h3>
+          <h3 className="text-sm font-bold text-zinc-800 border-l-2 border-zinc-300 pl-3">{title}</h3>
         </button>
         <div className="flex items-center gap-2">
           {previousItems && (
@@ -111,7 +111,7 @@ export default function SectionCard({
               variant="ghost"
               size="sm"
               onClick={handleUndo}
-              className="h-7 text-xs text-blue-600 hover:text-blue-800 gap-1"
+              className="h-7 text-xs text-zinc-500 hover:text-zinc-900 gap-1"
             >
               <Undo2 className="h-3.5 w-3.5" />
               되돌리기
@@ -123,7 +123,7 @@ export default function SectionCard({
               size="sm"
               onClick={handleRegenerate}
               disabled={rewritingMode !== null}
-              className="h-7 text-xs text-zinc-400 hover:text-blue-600 gap-1"
+              className="h-7 text-xs text-zinc-600 hover:text-zinc-900 gap-1"
             >
               {rewritingMode === "regenerate" ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -138,7 +138,7 @@ export default function SectionCard({
               variant="ghost"
               size="sm"
               onClick={handleEdit}
-              className="h-7 text-xs text-zinc-400 hover:text-zinc-600 gap-1"
+              className="h-7 text-xs text-zinc-600 hover:text-zinc-900 gap-1"
             >
               <Pencil className="h-3.5 w-3.5" />
               편집
@@ -169,7 +169,7 @@ export default function SectionCard({
                 <Button
                   size="sm"
                   onClick={handleSave}
-                  className="h-8 bg-blue-600 text-xs text-white hover:bg-blue-700 rounded-lg btn-press"
+                  className="h-8 bg-zinc-900 text-xs text-white hover:bg-zinc-800 rounded-lg btn-press"
                 >
                   저장
                 </Button>
@@ -180,7 +180,7 @@ export default function SectionCard({
               <ul className="space-y-1.5">
                 {items.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-zinc-600">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400" />
                     {item}
                   </li>
                 ))}
@@ -194,7 +194,7 @@ export default function SectionCard({
                       type="button"
                       disabled={rewritingMode !== null}
                       onClick={() => handleRewrite(mode)}
-                      className="rounded-full px-3 py-1.5 text-xs font-medium border border-zinc-200 bg-zinc-50 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-zinc-500"
+                      className="rounded px-3 py-1.5 text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 border-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {rewritingMode === mode ? (
                         <span className="flex items-center gap-1">

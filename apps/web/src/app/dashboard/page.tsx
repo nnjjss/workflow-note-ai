@@ -47,9 +47,9 @@ function saveCompletedSet(set: Set<string>) {
 }
 
 const PRIORITY_CONFIG = {
-  high: { label: "높음", dot: "bg-red-500", badge: "badge-red", sort: 0 },
-  medium: { label: "보통", dot: "bg-amber-500", badge: "badge-amber", sort: 1 },
-  low: { label: "낮음", dot: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-600 border border-zinc-200", sort: 2 },
+  high: { label: "높음", dot: "bg-red-500", badge: "text-red-600 bg-red-50 text-xs", sort: 0 },
+  medium: { label: "보통", dot: "bg-amber-500", badge: "text-amber-600 bg-amber-50 text-xs", sort: 1 },
+  low: { label: "낮음", dot: "bg-zinc-400", badge: "text-zinc-500 bg-zinc-100 text-xs", sort: 2 },
 }
 
 const DOC_TYPE_LABELS: Record<string, string> = {
@@ -189,7 +189,7 @@ export default function DashboardPage() {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8">
         <div className="flex min-h-[300px] flex-col items-center justify-center gap-3">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
           <p className="text-sm text-zinc-400">대시보드 로딩 중...</p>
         </div>
       </div>
@@ -201,9 +201,7 @@ export default function DashboardPage() {
       {/* Page Header */}
       <div className="mb-6 animate-fade-in">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
-            <BarChart3 className="h-5 w-5 text-blue-600" />
-          </div>
+          <BarChart3 className="h-5 w-5 text-zinc-600" />
           <div>
             <h1 className="text-xl font-bold text-zinc-900">대시보드</h1>
             <p className="text-sm text-zinc-500">
@@ -214,34 +212,34 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg badge-red px-4 py-3 animate-fade-in">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          <p className="text-sm font-medium">{error}</p>
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 animate-fade-in">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" />
+          <p className="text-sm font-medium text-red-700">{error}</p>
         </div>
       )}
 
       {/* Summary Cards */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 animate-fade-in stagger-1">
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <p className="text-xs font-medium text-blue-600">전체</p>
-          <p className="mt-1 text-2xl font-bold text-blue-700">{stats.total}</p>
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 animate-fade-in">
+        <div className="rounded-lg border border-zinc-200 border-l-2 border-l-zinc-400 bg-white p-4">
+          <p className="text-xs font-medium text-zinc-500">전체</p>
+          <p className="mt-1 text-2xl font-bold text-zinc-900">{stats.total}</p>
         </div>
-        <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-          <p className="text-xs font-medium text-red-600">긴급</p>
-          <p className="mt-1 text-2xl font-bold text-red-700">{stats.high}</p>
+        <div className="rounded-lg border border-zinc-200 border-l-2 border-l-red-400 bg-white p-4">
+          <p className="text-xs font-medium text-zinc-500">긴급</p>
+          <p className="mt-1 text-2xl font-bold text-zinc-900">{stats.high}</p>
         </div>
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <p className="text-xs font-medium text-amber-600">진행중</p>
-          <p className="mt-1 text-2xl font-bold text-amber-700">{stats.inProgress}</p>
+        <div className="rounded-lg border border-zinc-200 border-l-2 border-l-amber-400 bg-white p-4">
+          <p className="text-xs font-medium text-zinc-500">진행중</p>
+          <p className="mt-1 text-2xl font-bold text-zinc-900">{stats.inProgress}</p>
         </div>
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-xs font-medium text-emerald-600">완료</p>
-          <p className="mt-1 text-2xl font-bold text-emerald-700">{stats.completed}</p>
+        <div className="rounded-lg border border-zinc-200 border-l-2 border-l-emerald-400 bg-white p-4">
+          <p className="text-xs font-medium text-zinc-500">완료</p>
+          <p className="mt-1 text-2xl font-bold text-zinc-900">{stats.completed}</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="mb-4 flex flex-wrap items-center gap-3 animate-fade-in stagger-2">
+      <div className="mb-4 flex flex-wrap items-center gap-3 animate-fade-in">
         {/* Status filter */}
         <select
           value={statusFilter}
@@ -280,7 +278,7 @@ export default function DashboardPage() {
 
       {/* Items List */}
       {items.length === 0 && !loading ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 animate-fade-in">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white py-16 animate-fade-in">
           <Inbox className="mb-3 h-10 w-10 text-zinc-300" />
           <p className="text-sm font-medium text-zinc-500">
             아직 액션아이템이 없습니다
@@ -290,21 +288,21 @@ export default function DashboardPage() {
           </p>
           <Link
             href="/generator"
-            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 btn-press transition-colors"
+            className="mt-4 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 btn-press transition-colors"
           >
             문서 생성하기
           </Link>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white py-12 animate-fade-in">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white py-12 animate-fade-in">
           <Search className="mb-3 h-8 w-8 text-zinc-300" />
           <p className="text-sm font-medium text-zinc-500">
             필터 조건에 맞는 항목이 없습니다
           </p>
         </div>
       ) : (
-        <div className="space-y-2 animate-fade-in stagger-3">
-          {filteredItems.map((item, idx) => {
+        <div className="animate-fade-in">
+          {filteredItems.map((item) => {
             const completed = completedKeys.has(item.compositeKey)
             const overdue = !completed && isOverdue(item.due_date)
             const config = PRIORITY_CONFIG[item.priority] || PRIORITY_CONFIG.medium
@@ -312,10 +310,9 @@ export default function DashboardPage() {
             return (
               <div
                 key={item.compositeKey}
-                className={`card-base p-4 transition-all ${
-                  overdue ? "border-red-300 bg-red-50/50" : ""
+                className={`border-b border-zinc-100 py-3 transition-all ${
+                  overdue ? "bg-red-50/50" : ""
                 } ${completed ? "opacity-60" : ""}`}
-                style={{ animationDelay: `${Math.min(idx * 30, 300)}ms` }}
               >
                 <div className="flex items-start gap-3">
                   {/* Priority dot */}
@@ -325,12 +322,12 @@ export default function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.badge}`}
+                        className={`rounded px-2 py-0.5 font-medium ${config.badge}`}
                       >
                         {config.label}
                       </span>
                       {overdue && (
-                        <span className="rounded-full badge-red px-2 py-0.5 text-xs font-medium">
+                        <span className="rounded text-red-600 bg-red-50 px-2 py-0.5 text-xs font-medium">
                           기한 초과
                         </span>
                       )}

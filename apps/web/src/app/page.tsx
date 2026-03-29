@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { SampleScenarioCondensed, SCENARIOS } from "@/components/generator/SampleScenarios"
 import {
   PenLine,
-  Sparkles,
+  FileOutput,
   Share2,
   FileText,
   BarChart3,
@@ -27,7 +27,7 @@ const STEPS = [
     step: "2",
     title: "AI 변환",
     description: "구조화된 문서로 변환",
-    icon: Sparkles,
+    icon: FileOutput,
   },
   {
     step: "3",
@@ -78,9 +78,9 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="flex flex-col items-center px-4 pb-20 pt-24 text-center bg-gradient-to-b from-white via-blue-50/30 to-white">
+      <section className="flex flex-col items-center px-4 pb-20 pt-24 text-center bg-white">
         <div className="animate-fade-in">
-          <h1 className="heading-gradient text-4xl font-bold tracking-tight lg:text-5xl">
+          <h1 className="text-zinc-900 text-3xl font-bold tracking-tight lg:text-4xl">
             메모를 보고서로,
             <br />
             액션아이템까지
@@ -91,14 +91,14 @@ export default function Home() {
             AI가 자동으로 정리합니다
           </p>
         </div>
-        <div className="mt-10 flex items-center gap-4 animate-fade-in stagger-2">
+        <div className="mt-10 flex items-center gap-3">
           <Link href="/generator">
-            <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl text-white px-8 py-3 rounded-xl btn-press text-base transition-all duration-200">
+            <Button className="bg-zinc-900 hover:bg-zinc-800 shadow-sm text-white px-8 py-3 rounded-lg btn-press text-base transition-all duration-200">
               지금 시작하기
             </Button>
           </Link>
           <a href="#how-it-works">
-            <Button variant="outline" className="border border-zinc-300 hover:border-zinc-400 text-zinc-700 text-base rounded-xl px-6 py-3 transition-colors duration-200">
+            <Button variant="outline" className="border border-zinc-300 text-zinc-600 hover:text-zinc-900 text-base rounded-lg px-6 py-3 transition-colors duration-200">
               사용법 보기
             </Button>
           </a>
@@ -111,18 +111,18 @@ export default function Home() {
           <h2 className="mb-12 text-center text-xs font-semibold uppercase tracking-widest text-zinc-400">
             How It Works
           </h2>
-          <div className="grid gap-8 sm:grid-cols-3">
-            {STEPS.map((step, index) => {
+          <div className="grid gap-6 sm:grid-cols-3">
+            {STEPS.map((step) => {
               const Icon = step.icon
               return (
                 <div
                   key={step.step}
-                  className={`card-base p-6 text-center animate-slide-up stagger-${index + 1}`}
+                  className="border border-zinc-200 rounded-lg bg-white p-6 text-center"
                 >
-                  <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-sm font-bold text-white shadow-md">
+                  <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-sm font-bold text-white">
                     {step.step}
                   </div>
-                  <Icon className="mx-auto mb-3 h-5 w-5 text-blue-600" />
+                  <Icon className="mx-auto mb-3 h-5 w-5 text-zinc-600" />
                   <h3 className="mb-1 text-sm font-semibold text-zinc-800">
                     {step.title}
                   </h3>
@@ -135,21 +135,21 @@ export default function Home() {
       </section>
 
       {/* Document Types */}
-      <section className="px-4 py-20">
+      <section className="px-4 py-20 bg-white">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-12 text-center text-lg font-bold text-zinc-900">
             지원하는 문서 유형
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            {DOC_TYPES.map((doc, index) => {
+            {DOC_TYPES.map((doc) => {
               const Icon = doc.icon
               return (
                 <div
                   key={doc.title}
-                  className={`card-interactive border-t-2 border-t-blue-500 p-6 text-center animate-slide-up stagger-${index + 1}`}
+                  className="border border-zinc-200 rounded-lg p-6 text-center"
                 >
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                    <Icon className="h-5 w-5 text-blue-600" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100">
+                    <Icon className="h-5 w-5 text-zinc-600" />
                   </div>
                   <h3 className="mb-1 text-sm font-semibold text-zinc-800">
                     {doc.title}
@@ -168,16 +168,16 @@ export default function Home() {
           <h2 className="mb-10 text-center text-lg font-bold text-zinc-900">
             핵심 기능
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {FEATURES.map((feature, index) => {
+          <div className="grid gap-3 sm:grid-cols-2">
+            {FEATURES.map((feature) => {
               const Icon = feature.icon
               return (
                 <div
                   key={feature.text}
-                  className={`card-base flex items-center gap-3 px-5 py-4 animate-slide-up stagger-${index + 1}`}
+                  className="card-base flex items-center gap-3 px-5 py-4"
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-                    <Icon className="h-5 w-5 text-blue-600" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100">
+                    <Icon className="h-5 w-5 text-zinc-600" />
                   </div>
                   <span className="text-sm font-medium text-zinc-700">
                     {feature.text}
@@ -190,24 +190,24 @@ export default function Home() {
       </section>
 
       {/* Real Examples */}
-      <section className="px-4 py-20">
+      <section className="px-4 py-20 bg-white">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-2 text-center text-xs font-semibold uppercase tracking-widest text-blue-600">
+          <h2 className="mb-2 text-center text-xs font-semibold uppercase tracking-widest text-zinc-400">
             Real Examples
           </h2>
           <p className="mb-10 text-center text-lg font-bold text-zinc-900">
             AI가 실제로 생성하는 결과물을 확인해보세요
           </p>
           <div className="space-y-4">
-            {SCENARIOS.map((scenario, index) => (
-              <div key={scenario.id} className={`animate-slide-up stagger-${index + 1}`}>
+            {SCENARIOS.map((scenario) => (
+              <div key={scenario.id}>
                 <SampleScenarioCondensed scenario={scenario} />
               </div>
             ))}
           </div>
           <div className="mt-8 text-center">
             <Link href="/generator">
-              <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl text-white px-8 py-3 rounded-xl btn-press text-base transition-all duration-200">
+              <Button className="bg-zinc-900 hover:bg-zinc-800 shadow-sm text-white px-8 py-3 rounded-lg btn-press text-base transition-all duration-200">
                 직접 체험하기
               </Button>
             </Link>
@@ -224,7 +224,7 @@ export default function Home() {
           회원가입 없이 바로 시작할 수 있습니다
         </p>
         <Link href="/generator" className="mt-8 inline-block">
-          <Button className="bg-white text-zinc-900 hover:bg-zinc-100 shadow-lg px-8 py-3 rounded-xl btn-press text-base font-semibold transition-all duration-200">
+          <Button className="bg-white text-zinc-900 hover:bg-zinc-100 shadow-sm px-8 py-3 rounded-lg btn-press text-base font-semibold transition-all duration-200">
             무료로 시작하기
           </Button>
         </Link>

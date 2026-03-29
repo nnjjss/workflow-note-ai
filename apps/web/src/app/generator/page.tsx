@@ -10,7 +10,7 @@ import { DocType, GenerateResponse } from "@/lib/types"
 import { getOrCreateDemoUser } from "@/lib/auth"
 import { useToast } from "@/components/ui/Toast"
 import SampleScenarios from "@/components/generator/SampleScenarios"
-import { Sparkles, Loader2, ArrowDown, AlertCircle } from "lucide-react"
+import { FileText, Loader2, ArrowDown } from "lucide-react"
 
 function GeneratorContent() {
   const searchParams = useSearchParams()
@@ -235,9 +235,7 @@ function GeneratorContent() {
       {/* Page Header */}
       <div className="mb-6 animate-fade-in">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
-            <Sparkles className="h-5 w-5 text-blue-600" />
-          </div>
+          <FileText className="h-5 w-5 text-zinc-600" />
           <div>
             <h1 className="text-xl font-bold text-zinc-900">문서 생성</h1>
             <p className="text-sm text-zinc-500">메모를 입력하면 AI가 구조화된 문서로 정리합니다</p>
@@ -247,21 +245,20 @@ function GeneratorContent() {
 
       {/* Streaming Toggle */}
       <div className="mb-4 flex items-center gap-2 animate-fade-in">
-        <label className="relative inline-flex cursor-pointer items-center">
+        <label className="flex cursor-pointer items-center gap-2">
           <input
             type="checkbox"
             checked={useStreaming}
             onChange={() => setUseStreaming(!useStreaming)}
-            className="peer sr-only"
+            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
           />
-          <div className="peer h-5 w-9 rounded-full bg-zinc-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:bg-blue-600 peer-checked:after:translate-x-full" />
+          <span className="text-sm text-zinc-600">실시간 스트리밍</span>
         </label>
-        <span className="text-sm text-zinc-600">실시간 스트리밍</span>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* Left: Input */}
-        <div className="animate-fade-in stagger-1">
+        <div className="animate-fade-in">
           <InputPanel
             docType={docType}
             setDocType={setDocType}
@@ -280,7 +277,7 @@ function GeneratorContent() {
           {showScrollButton && result && (
             <button
               onClick={scrollToResult}
-              className="mt-3 w-full lg:hidden flex items-center justify-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-4 py-2.5 text-sm font-medium text-blue-700 btn-press transition-all hover:bg-blue-100 animate-fade-in"
+              className="mt-3 w-full lg:hidden flex items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white btn-press transition-all hover:bg-zinc-800 animate-fade-in"
             >
               <ArrowDown className="h-4 w-4" />
               결과 보기
@@ -289,23 +286,23 @@ function GeneratorContent() {
         </div>
 
         {/* Right: Result or Sample Scenarios */}
-        <div ref={resultRef} className="animate-fade-in stagger-2 scroll-mt-20">
+        <div ref={resultRef} className="animate-fade-in scroll-mt-20">
           {!result && !loading && !content.trim() ? (
             <SampleScenarios onSelect={handleSelectScenario} />
           ) : (
             <>
               {/* Visual separator on mobile */}
               {(result || loading) && (
-                <div className="lg:hidden mb-4 border-t-2 border-blue-200 pt-4">
-                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">생성 결과</p>
+                <div className="lg:hidden mb-4 border-t-2 border-zinc-200 pt-4">
+                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">생성 결과</p>
                 </div>
               )}
 
               {/* Streaming live preview */}
               {useStreaming && loading && streamingText && (
-                <div className="card-elevated mb-4 p-4 animate-fade-in">
+                <div className="border border-zinc-200 rounded-lg bg-white mb-4 p-4 animate-fade-in">
                   <div className="mb-2 flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                    <Loader2 className="h-4 w-4 animate-spin text-zinc-600" />
                     <span className="text-sm font-medium text-zinc-600">AI 생성 중...</span>
                   </div>
                   <pre className="max-h-[400px] overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-zinc-50 p-4 font-mono text-sm text-zinc-700">
@@ -328,7 +325,7 @@ export default function GeneratorPage() {
       fallback={
         <div className="mx-auto max-w-5xl px-4 py-8">
           <div className="flex min-h-[300px] flex-col items-center justify-center gap-3">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+            <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
             <p className="text-sm text-zinc-400">로딩 중...</p>
           </div>
         </div>

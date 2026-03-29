@@ -12,11 +12,6 @@ interface OutputPreview {
 interface SampleScenario {
   id: string
   icon: typeof FileText
-  iconColor: string
-  accentColor: string
-  badgeClass: string
-  outputBg: string
-  outputBorder: string
   type: DocType
   typeLabel: string
   title: string
@@ -33,18 +28,13 @@ interface SampleScenario {
 const PRIORITY_DOT: Record<string, string> = {
   high: "bg-red-500",
   medium: "bg-amber-400",
-  low: "bg-blue-400",
+  low: "bg-zinc-400",
 }
 
 const SCENARIOS: SampleScenario[] = [
   {
     id: "marketing-meeting",
     icon: FileText,
-    iconColor: "text-blue-500",
-    accentColor: "border-l-blue-500",
-    badgeClass: "badge-blue",
-    outputBg: "from-blue-50/60 to-white",
-    outputBorder: "border-blue-100",
     type: "meeting_note",
     typeLabel: "회의록",
     title: "마케팅 팀 Q2 전략 회의",
@@ -91,11 +81,6 @@ const SCENARIOS: SampleScenario[] = [
   {
     id: "dev-weekly",
     icon: BarChart3,
-    iconColor: "text-emerald-500",
-    accentColor: "border-l-emerald-500",
-    badgeClass: "badge-green",
-    outputBg: "from-emerald-50/60 to-white",
-    outputBorder: "border-emerald-100",
     type: "weekly_report",
     typeLabel: "주간보고",
     title: "개발팀 3월 4주차 주간보고",
@@ -141,11 +126,6 @@ const SCENARIOS: SampleScenario[] = [
   {
     id: "pm-daily",
     icon: ClipboardList,
-    iconColor: "text-amber-500",
-    accentColor: "border-l-amber-500",
-    badgeClass: "badge-amber",
-    outputBg: "from-amber-50/60 to-white",
-    outputBorder: "border-amber-100",
     type: "daily_log",
     typeLabel: "업무일지",
     title: "3월 27일 PM 업무일지",
@@ -199,7 +179,6 @@ interface SampleScenariosProps {
 
 function ScenarioCard({
   scenario,
-  index,
   onSelect,
 }: {
   scenario: SampleScenario
@@ -210,18 +189,18 @@ function ScenarioCard({
 
   return (
     <div
-      className={`card-interactive border-l-4 ${scenario.accentColor} p-5 sm:p-6 animate-slide-up stagger-${index + 1}`}
+      className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in"
     >
       {/* Badge */}
       <span
-        className={`${scenario.badgeClass} inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
+        className="bg-zinc-100 text-zinc-700 border border-zinc-200 rounded text-xs px-2 py-0.5 inline-flex items-center gap-1"
       >
-        <Icon className="h-3 w-3" />
+        <Icon className="h-3 w-3 text-zinc-500" />
         {scenario.typeLabel}
       </span>
 
       {/* Title & Situation */}
-      <h3 className="mt-3 text-base font-bold text-zinc-900 sm:text-lg">
+      <h3 className="mt-3 text-base font-bold text-zinc-900">
         {scenario.title}
       </h3>
       <p className="mt-1 text-sm text-zinc-500">{scenario.situation}</p>
@@ -238,7 +217,7 @@ function ScenarioCard({
 
       {/* Output Preview */}
       <div
-        className={`mt-3 rounded-lg border ${scenario.outputBorder} bg-gradient-to-br ${scenario.outputBg} p-4`}
+        className="mt-3 rounded-lg border border-zinc-100 bg-zinc-50 p-4"
       >
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
           AI 결과 미리보기
@@ -247,7 +226,7 @@ function ScenarioCard({
         {/* Summary */}
         <div className="mb-3">
           <p className="mb-1 text-xs font-bold text-zinc-700 flex items-center gap-1">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             핵심 요약
           </p>
           <p className="text-sm leading-relaxed text-zinc-600 line-clamp-2">
@@ -258,7 +237,7 @@ function ScenarioCard({
         {/* Action Items */}
         <div className="mb-3">
           <p className="mb-1.5 text-xs font-bold text-zinc-700 flex items-center gap-1">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             액션아이템 ({scenario.outputPreview.actionItems.length}건)
           </p>
           <div className="space-y-1">
@@ -277,12 +256,12 @@ function ScenarioCard({
         </div>
 
         {/* Key Decision */}
-        <div className="rounded-md bg-white/70 px-3 py-2 border border-zinc-100">
+        <div className="rounded-md bg-white px-3 py-2 border border-zinc-100">
           <p className="text-xs font-bold text-zinc-700 flex items-center gap-1 mb-0.5">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             주요 결정
           </p>
-          <p className="text-sm font-medium text-blue-800">
+          <p className="text-sm font-medium text-zinc-800">
             {scenario.outputPreview.keyDecision}
           </p>
         </div>
@@ -299,7 +278,7 @@ function ScenarioCard({
             metadata: scenario.fullInput.metadata,
           })
         }
-        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-600 transition-all hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700 btn-press"
+        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 hover:text-zinc-900 btn-press"
       >
         이 예시로 시작하기
         <ArrowRight className="h-4 w-4" />
@@ -317,13 +296,13 @@ export function SampleScenarioCondensed({
   const Icon = scenario.icon
 
   return (
-    <div className={`rounded-xl border border-zinc-200 bg-white shadow-sm border-l-4 ${scenario.accentColor} p-5`}>
+    <div className="rounded-lg border border-zinc-200 bg-white p-5">
       {/* Badge + Title */}
       <div className="flex items-center gap-2 mb-3">
         <span
-          className={`${scenario.badgeClass} inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold`}
+          className="bg-zinc-100 text-zinc-700 border border-zinc-200 rounded text-xs px-2 py-0.5 inline-flex items-center gap-1"
         >
-          <Icon className="h-3 w-3" />
+          <Icon className="h-3 w-3 text-zinc-500" />
           {scenario.typeLabel}
         </span>
         <span className="text-sm font-bold text-zinc-800">{scenario.title}</span>
@@ -331,12 +310,12 @@ export function SampleScenarioCondensed({
 
       {/* Output Preview */}
       <div
-        className={`rounded-lg border ${scenario.outputBorder} bg-gradient-to-br ${scenario.outputBg} p-4`}
+        className="rounded-lg border border-zinc-100 bg-zinc-50 p-4"
       >
         {/* Summary */}
         <div className="mb-3">
           <p className="mb-1 text-xs font-bold text-zinc-700 flex items-center gap-1">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             핵심 요약
           </p>
           <p className="text-sm leading-relaxed text-zinc-600 line-clamp-2">
@@ -347,7 +326,7 @@ export function SampleScenarioCondensed({
         {/* Action Items */}
         <div className="mb-3">
           <p className="mb-1.5 text-xs font-bold text-zinc-700 flex items-center gap-1">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             액션아이템 ({scenario.outputPreview.actionItems.length}건)
           </p>
           <div className="space-y-1">
@@ -366,12 +345,12 @@ export function SampleScenarioCondensed({
         </div>
 
         {/* Key Decision */}
-        <div className="rounded-md bg-white/70 px-3 py-2 border border-zinc-100">
+        <div className="rounded-md bg-white px-3 py-2 border border-zinc-100">
           <p className="text-xs font-bold text-zinc-700 flex items-center gap-1 mb-0.5">
-            <span className="inline-block h-3.5 w-0.5 rounded-full bg-blue-500" />
+            <span className="inline-block h-3.5 w-0.5 rounded-full bg-zinc-400" />
             주요 결정
           </p>
-          <p className="text-sm font-medium text-blue-800">
+          <p className="text-sm font-medium text-zinc-800">
             {scenario.outputPreview.keyDecision}
           </p>
         </div>
@@ -387,7 +366,7 @@ export default function SampleScenarios({ onSelect }: SampleScenariosProps) {
     <div className="space-y-4">
       {/* Header */}
       <div className="text-center animate-fade-in">
-        <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2">
           Sample Scenarios
         </p>
         <h2 className="text-lg font-bold text-zinc-900">

@@ -17,10 +17,10 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 backdrop-blur-sm bg-white/80">
+    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold text-zinc-900 transition-colors hover:text-zinc-700">
-          <FileText className="h-5 w-5 text-blue-600" />
+          <FileText className="h-5 w-5 text-zinc-700" />
           WorkFlow Note
         </Link>
 
@@ -32,10 +32,10 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-lg px-3 py-1.5 text-sm transition-colors duration-150 ${
+                className={`px-3 py-1.5 text-sm transition-colors duration-150 ${
                   isActive
-                    ? "text-blue-600 font-semibold bg-blue-50"
-                    : "text-zinc-600 hover:text-blue-600 hover:bg-zinc-100"
+                    ? "text-zinc-900 font-semibold border-b-2 border-zinc-900"
+                    : "text-zinc-500 hover:text-zinc-900"
                 }`}
               >
                 {item.label}
@@ -43,7 +43,7 @@ export default function Header() {
             )
           })}
           <Link href="/generator" className="ml-2">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg px-4 py-1.5 shadow-sm btn-press transition-colors duration-150">
+            <button className="bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium rounded-lg px-4 py-1.5 shadow-sm btn-press transition-colors duration-150">
               무료 시작
             </button>
           </Link>
@@ -70,10 +70,10 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
+                  className={`px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                     isActive
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-zinc-600 hover:text-blue-600 hover:bg-zinc-50"
+                      ? "text-zinc-900 font-semibold"
+                      : "text-zinc-500 hover:text-zinc-900"
                   }`}
                 >
                   {item.label}
@@ -85,7 +85,7 @@ export default function Header() {
               onClick={() => setMobileOpen(false)}
               className="mt-2 mb-1"
             >
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg px-4 py-2.5 shadow-sm btn-press transition-colors duration-150">
+              <button className="w-full bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium rounded-lg px-4 py-2.5 shadow-sm btn-press transition-colors duration-150">
                 무료 시작
               </button>
             </Link>

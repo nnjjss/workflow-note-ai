@@ -91,9 +91,7 @@ export default function SettingsPage() {
       {/* Page Header */}
       <div className="mb-8 animate-fade-in">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
-            <Settings className="h-5 w-5 text-blue-600" />
-          </div>
+          <Settings className="h-5 w-5 text-zinc-600" />
           <div>
             <h1 className="text-xl font-bold text-zinc-900">설정</h1>
             <p className="text-sm text-zinc-500">계정 및 환경 설정을 관리합니다</p>
@@ -101,16 +99,16 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         {/* User Info */}
-        <div className="card-base p-6 animate-fade-in stagger-1">
-          <div className="mb-5 flex items-center gap-2">
+        <div className="border border-zinc-200 rounded-lg p-5 animate-fade-in">
+          <div className="mb-4 flex items-center gap-2">
             <UserIcon className="h-4.5 w-4.5 text-zinc-500" />
             <h2 className="text-sm font-bold text-zinc-800">사용자 정보</h2>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="name" className="text-sm font-semibold text-zinc-800">이름</Label>
+              <Label htmlFor="name" className="text-sm font-medium text-zinc-700">이름</Label>
               <div className="flex gap-2">
                 <Input
                   id="name"
@@ -123,7 +121,7 @@ export default function SettingsPage() {
                   size="sm"
                   onClick={handleSaveName}
                   disabled={saving}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-press gap-1.5"
                 >
                   {saving ? (
                     <>
@@ -140,7 +138,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email" className="text-sm font-semibold text-zinc-800">이메일</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-zinc-700">이메일</Label>
               <Input
                 id="email"
                 value={user.email}
@@ -153,14 +151,14 @@ export default function SettingsPage() {
         </div>
 
         {/* Share Settings */}
-        <div className="card-base p-6 animate-fade-in stagger-2">
-          <div className="mb-5 flex items-center gap-2">
+        <div className="border border-zinc-200 rounded-lg p-5 animate-fade-in">
+          <div className="mb-4 flex items-center gap-2">
             <Share2 className="h-4.5 w-4.5 text-zinc-500" />
             <h2 className="text-sm font-bold text-zinc-800">공유 설정</h2>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="slack-webhook" className="text-sm font-semibold text-zinc-800">Slack Webhook URL</Label>
+              <Label htmlFor="slack-webhook" className="text-sm font-medium text-zinc-700">Slack Webhook URL</Label>
               <div className="flex gap-2">
                 <Input
                   id="slack-webhook"
@@ -173,7 +171,7 @@ export default function SettingsPage() {
                   size="sm"
                   onClick={handleSaveSlack}
                   disabled={slackSaving}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-press gap-1.5"
                 >
                   {slackSaving ? (
                     <>
@@ -198,8 +196,8 @@ export default function SettingsPage() {
         </div>
 
         {/* Data */}
-        <div className="card-base p-6 animate-fade-in stagger-3">
-          <div className="mb-5 flex items-center gap-2">
+        <div className="border border-zinc-200 rounded-lg p-5 animate-fade-in">
+          <div className="mb-4 flex items-center gap-2">
             <Database className="h-4.5 w-4.5 text-zinc-500" />
             <h2 className="text-sm font-bold text-zinc-800">데이터</h2>
           </div>
@@ -210,10 +208,10 @@ export default function SettingsPage() {
             <div className="rounded-lg border border-red-200 bg-red-50 p-4">
               <p className="mb-3 text-sm text-red-700">모든 로컬 데이터를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.</p>
               <Button
-                variant="destructive"
+                variant="outline"
                 size="sm"
                 onClick={handleClearAll}
-                className="gap-1.5 btn-press"
+                className="gap-1.5 btn-press text-red-600 hover:bg-red-50 border-red-200"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 전체 삭제

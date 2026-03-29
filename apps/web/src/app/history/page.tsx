@@ -35,12 +35,6 @@ const DOC_TYPE_LABELS: Record<string, string> = {
   daily_log: "업무일지",
 }
 
-const DOC_TYPE_BADGE_STYLES: Record<string, string> = {
-  meeting_note: "badge-blue",
-  weekly_report: "badge-green",
-  daily_log: "badge-amber",
-}
-
 const DOC_TYPE_ICONS: Record<string, React.ReactNode> = {
   meeting_note: <FileText className="h-3 w-3" />,
   weekly_report: <BarChart3 className="h-3 w-3" />,
@@ -138,9 +132,7 @@ export default function HistoryPage() {
       {/* Page Header */}
       <div className="mb-6 animate-fade-in">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
-            <History className="h-5 w-5 text-blue-600" />
-          </div>
+          <History className="h-5 w-5 text-zinc-600" />
           <div>
             <h1 className="text-xl font-bold text-zinc-900">히스토리</h1>
             <p className="text-sm text-zinc-500">문서 생성 기록을 확인합니다</p>
@@ -149,7 +141,7 @@ export default function HistoryPage() {
       </div>
 
       {/* Filters */}
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between animate-fade-in stagger-1">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between animate-fade-in">
         <div className="flex flex-wrap gap-1.5">
           {DOC_TYPE_FILTERS.map((filter) => (
             <button
@@ -159,10 +151,10 @@ export default function HistoryPage() {
                 setDocTypeFilter(filter.value)
                 setPage(1)
               }}
-              className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all ${
+              className={`inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                 docTypeFilter === filter.value
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "bg-white border border-zinc-200 text-zinc-600 hover:border-blue-300 hover:text-blue-600"
+                  ? "bg-zinc-900 text-white"
+                  : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50"
               }`}
             >
               {filter.label}
@@ -184,9 +176,9 @@ export default function HistoryPage() {
 
       {/* Loading State */}
       {loadingState && (
-        <div className="card-base p-6 animate-fade-in">
+        <div className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in">
           <div className="flex min-h-[200px] flex-col items-center justify-center gap-3">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+            <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
             <p className="text-sm text-zinc-400">불러오는 중...</p>
           </div>
         </div>
@@ -194,9 +186,9 @@ export default function HistoryPage() {
 
       {/* Empty State */}
       {!loadingState && documents.length === 0 && (
-        <div className="card-base p-6 animate-fade-in">
+        <div className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in">
           <div className="flex min-h-[200px] flex-col items-center justify-center gap-4">
-            <FileText className="h-12 w-12 text-zinc-200" />
+            <FileText className="h-12 w-12 text-zinc-300" />
             <div className="text-center">
               <p className="text-sm font-medium text-zinc-400">저장된 문서가 없습니다</p>
               <p className="mt-1 text-xs text-zinc-300">문서를 생성하면 자동으로 저장됩니다</p>
@@ -204,7 +196,7 @@ export default function HistoryPage() {
             <Button
               size="sm"
               onClick={() => router.push("/generator")}
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
+              className="mt-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-press gap-1.5"
             >
               <FilePlus className="h-4 w-4" />
               새 문서 만들기
@@ -215,12 +207,11 @@ export default function HistoryPage() {
 
       {/* Document List */}
       {!loadingState && documents.length > 0 && (
-        <div className="space-y-2.5">
-          {documents.map((doc, index) => (
+        <div>
+          {documents.map((doc) => (
             <div
               key={doc.id}
-              className="card-interactive p-4 animate-fade-in"
-              style={{ animationDelay: `${index * 0.05}s` }}
+              className="border-b border-zinc-100 py-3 animate-fade-in"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -229,9 +220,7 @@ export default function HistoryPage() {
                       {doc.title}
                     </h3>
                     <span
-                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
-                        DOC_TYPE_BADGE_STYLES[doc.doc_type] || "badge-blue"
-                      }`}
+                      className="inline-flex shrink-0 items-center gap-1 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded text-xs px-2 py-0.5"
                     >
                       {DOC_TYPE_ICONS[doc.doc_type]}
                       {DOC_TYPE_LABELS[doc.doc_type] || doc.doc_type}
@@ -252,7 +241,7 @@ export default function HistoryPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleOpen(doc.id)}
-                  className="h-8 text-xs border-zinc-200 hover:border-blue-300 hover:text-blue-600 gap-1 transition-all"
+                  className="h-8 text-xs border-zinc-200 text-zinc-500 hover:text-zinc-900 gap-1 transition-all"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   열기
@@ -262,7 +251,7 @@ export default function HistoryPage() {
                   size="sm"
                   disabled={actionLoading === doc.id}
                   onClick={() => handleDuplicate(doc.id)}
-                  className="h-8 text-xs border-zinc-200 hover:border-blue-300 hover:text-blue-600 gap-1 transition-all"
+                  className="h-8 text-xs border-zinc-200 text-zinc-500 hover:text-zinc-900 gap-1 transition-all"
                 >
                   <Copy className="h-3.5 w-3.5" />
                   복제
@@ -291,7 +280,7 @@ export default function HistoryPage() {
             size="sm"
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
-            className="h-9 border-zinc-200 text-sm gap-1 transition-all hover:border-blue-300"
+            className="h-9 border-zinc-200 text-sm gap-1 transition-all hover:bg-zinc-50"
           >
             <ChevronLeft className="h-4 w-4" />
             이전
@@ -304,7 +293,7 @@ export default function HistoryPage() {
             size="sm"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="h-9 border-zinc-200 text-sm gap-1 transition-all hover:border-blue-300"
+            className="h-9 border-zinc-200 text-sm gap-1 transition-all hover:bg-zinc-50"
           >
             다음
             <ChevronRight className="h-4 w-4" />

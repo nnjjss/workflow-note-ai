@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { FileText, BarChart3, ClipboardList, Sparkles, X, Lightbulb } from "lucide-react"
+import { FileText, BarChart3, ClipboardList, X } from "lucide-react"
 
 const LS_KEY = "workflow_note_onboarded"
 
@@ -34,11 +34,6 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
     onClose()
   }
 
-  function handleStartWithExample() {
-    dismiss()
-    onStartWithExample?.()
-  }
-
   function handleStartDirect() {
     dismiss()
   }
@@ -55,9 +50,9 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
     <div
       ref={backdropRef}
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 animate-fade-in"
     >
-      <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl animate-slide-up">
+      <div className="relative w-full max-w-md rounded-lg bg-white shadow-xl animate-slide-up">
         {/* Close button */}
         <button
           onClick={dismiss}
@@ -69,8 +64,8 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
         <div className="p-6 sm:p-8">
           {/* Welcome */}
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
-              <Sparkles className="h-6 w-6 text-blue-600" />
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-100">
+              <FileText className="h-6 w-6 text-zinc-700" />
             </div>
             <h2 className="text-lg font-bold text-zinc-900">
               WorkFlow Note AI에 오신 것을 환영합니다
@@ -85,7 +80,7 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
           {/* Steps */}
           <div className="mb-6 space-y-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-900">
                 1
               </div>
               <div>
@@ -105,7 +100,7 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-900">
                 2
               </div>
               <div>
@@ -117,7 +112,7 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-900">
                 3
               </div>
               <div>
@@ -129,29 +124,13 @@ export default function OnboardingModal({ open, onClose, onStartWithExample }: O
             </div>
           </div>
 
-          {/* Tip */}
-          <div className="mb-6 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5">
-            <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-            <p className="text-xs text-amber-700">
-              <span className="font-medium">팁:</span> 예시 템플릿으로 바로 체험해보세요
-            </p>
-          </div>
-
-          {/* Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={handleStartWithExample}
-              className="flex-1 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-100 btn-press transition-colors"
-            >
-              예시로 시작하기
-            </button>
-            <button
-              onClick={handleStartDirect}
-              className="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm btn-press transition-colors"
-            >
-              바로 시작하기
-            </button>
-          </div>
+          {/* Button */}
+          <button
+            onClick={handleStartDirect}
+            className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 shadow-sm btn-press transition-colors"
+          >
+            시작하기
+          </button>
         </div>
       </div>
     </div>

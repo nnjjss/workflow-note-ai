@@ -151,7 +151,7 @@ function resultToMarkdown(result: GenerateResponse, title: string): string {
     md += '\n'
   }
 
-  if (result.risks?.length) md += `## 리스크/이슈\n${result.risks.map(r => `- ⚠️ ${r}`).join('\n')}\n\n`
+  if (result.risks?.length) md += `## 리스크/이슈\n${result.risks.map(r => `- ${r}`).join('\n')}\n\n`
   if (result.next_steps?.length) md += `## 다음 단계\n${result.next_steps.map(n => `- ${n}`).join('\n')}\n\n`
 
   md += `---\n*WorkFlow Note AI로 생성됨*\n`
@@ -261,7 +261,7 @@ export default function SharePanel({ result, title }: SharePanelProps) {
 
   return (
     <Tabs defaultValue="clipboard">
-      <TabsList className="bg-zinc-100 rounded-lg p-1">
+      <TabsList className="bg-zinc-50 rounded-lg p-1">
         <TabsTrigger value="clipboard" className="gap-1.5">
           <Copy className="h-3.5 w-3.5" />
           클립보드
@@ -351,7 +351,7 @@ export default function SharePanel({ result, title }: SharePanelProps) {
             size="sm"
             onClick={handleSlackSend}
             disabled={slackLoading || !webhookUrl.trim()}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
+            className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-press gap-1.5"
           >
             {slackLoading ? (
               <>
@@ -385,7 +385,7 @@ export default function SharePanel({ result, title }: SharePanelProps) {
             size="sm"
             onClick={handleEmailSend}
             disabled={emailLoading || !toEmail.trim()}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
+            className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-press gap-1.5"
           >
             {emailLoading ? (
               <>

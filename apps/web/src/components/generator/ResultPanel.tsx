@@ -14,35 +14,35 @@ interface ResultPanelProps {
 export default function ResultPanel({ result, loading }: ResultPanelProps) {
   if (loading) {
     return (
-      <div className="space-y-5 animate-fade-in">
+      <div className="space-y-4 animate-fade-in">
         {/* Title skeleton */}
-        <div className="card-base p-5">
-          <div className="skeleton h-5 w-48 mb-2" />
-          <div className="skeleton h-4 w-32" />
+        <div className="border border-zinc-200 rounded-lg bg-white p-5">
+          <div className="h-5 w-48 mb-2 bg-zinc-100 rounded" />
+          <div className="h-4 w-32 bg-zinc-100 rounded" />
         </div>
         {/* Summary skeleton */}
-        <div className="card-base p-5">
-          <div className="skeleton h-4 w-24 mb-3" />
-          <div className="skeleton h-3 w-full mb-2" />
-          <div className="skeleton h-3 w-4/5 mb-2" />
-          <div className="skeleton h-3 w-3/5" />
+        <div className="border border-zinc-200 rounded-lg bg-white p-5">
+          <div className="h-4 w-24 mb-3 bg-zinc-100 rounded" />
+          <div className="h-3 w-full mb-2 bg-zinc-100 rounded" />
+          <div className="h-3 w-4/5 mb-2 bg-zinc-100 rounded" />
+          <div className="h-3 w-3/5 bg-zinc-100 rounded" />
         </div>
         {/* Key points skeleton */}
-        <div className="card-base p-5">
-          <div className="skeleton h-4 w-28 mb-3" />
+        <div className="border border-zinc-200 rounded-lg bg-white p-5">
+          <div className="h-4 w-28 mb-3 bg-zinc-100 rounded" />
           <div className="space-y-2">
-            <div className="skeleton h-3 w-full" />
-            <div className="skeleton h-3 w-5/6" />
-            <div className="skeleton h-3 w-4/6" />
+            <div className="h-3 w-full bg-zinc-100 rounded" />
+            <div className="h-3 w-5/6 bg-zinc-100 rounded" />
+            <div className="h-3 w-4/6 bg-zinc-100 rounded" />
           </div>
         </div>
         {/* Action items skeleton */}
-        <div className="card-base p-5">
-          <div className="skeleton h-4 w-28 mb-3" />
+        <div className="border border-zinc-200 rounded-lg bg-white p-5">
+          <div className="h-4 w-28 mb-3 bg-zinc-100 rounded" />
           <div className="space-y-2">
-            <div className="skeleton h-8 w-full" />
-            <div className="skeleton h-8 w-full" />
-            <div className="skeleton h-8 w-4/5" />
+            <div className="h-8 w-full bg-zinc-100 rounded" />
+            <div className="h-8 w-full bg-zinc-100 rounded" />
+            <div className="h-8 w-4/5 bg-zinc-100 rounded" />
           </div>
         </div>
         <p className="text-center text-sm text-zinc-400 pt-2">문서를 생성하고 있습니다...</p>
@@ -52,9 +52,9 @@ export default function ResultPanel({ result, loading }: ResultPanelProps) {
 
   if (!result) {
     return (
-      <div className="card-base p-6">
+      <div className="border border-zinc-200 rounded-lg bg-white p-5">
         <div className="flex min-h-[300px] flex-col items-center justify-center gap-4">
-          <FileText className="h-12 w-12 text-zinc-200" />
+          <FileText className="h-12 w-12 text-zinc-300" />
           <div className="text-center">
             <p className="text-sm font-medium text-zinc-400">아직 생성된 문서가 없습니다</p>
             <p className="mt-1 text-xs text-zinc-300">왼쪽에서 내용을 입력하고 문서를 생성해보세요</p>
@@ -65,15 +65,15 @@ export default function ResultPanel({ result, loading }: ResultPanelProps) {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Title */}
-      <div className="animate-fade-in rounded-xl border border-blue-200 bg-blue-50 p-5">
+      <div className="animate-fade-in rounded-lg border border-zinc-200 bg-white p-5">
         <h2 className="text-lg font-bold text-zinc-900">{result.title}</h2>
       </div>
 
       {/* Summary */}
-      <div className="card-base p-5 animate-fade-in stagger-1">
-        <h3 className="mb-2 text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">핵심 요약</h3>
+      <div className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in">
+        <h3 className="mb-2 text-sm font-bold text-zinc-800 border-l-2 border-zinc-300 pl-3">핵심 요약</h3>
         <p className="text-sm leading-relaxed text-zinc-600">{result.summary}</p>
       </div>
 
@@ -136,8 +136,8 @@ export default function ResultPanel({ result, loading }: ResultPanelProps) {
       )}
 
       {/* Share Panel */}
-      <div className="card-base p-5 animate-fade-in">
-        <h3 className="mb-3 text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">공유</h3>
+      <div className="border border-zinc-200 rounded-lg bg-white p-5 animate-fade-in">
+        <h3 className="mb-3 text-sm font-bold text-zinc-800 border-l-2 border-zinc-300 pl-3">공유</h3>
         <SharePanel result={result} title={result.title} />
       </div>
     </div>

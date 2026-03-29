@@ -140,51 +140,47 @@
 }
 
 /* Utility classes */
-.animate-fade-in { animation: fade-in 0.4s ease-out both; }
-.animate-slide-up { animation: slide-up 0.5s ease-out both; }
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
+.animate-fade-in { animation: fade-in 0.2s ease-out both; }
+.animate-slide-up { animation: slide-up 0.3s ease-out both; }
 
 /* Card elevation system */
 .card-base {
-  @apply rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-200;
+  @apply rounded-lg border border-zinc-200 bg-white shadow-sm transition-all duration-200;
 }
 .card-base:hover {
   @apply shadow-md border-zinc-300;
 }
 .card-elevated {
-  @apply rounded-xl border border-zinc-200 bg-white shadow-md;
+  @apply rounded-lg border border-zinc-200 bg-white shadow-md;
 }
 .card-interactive {
-  @apply rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-200 cursor-pointer;
+  @apply rounded-lg border border-zinc-200 bg-white shadow-sm transition-all duration-200 cursor-pointer;
 }
 .card-interactive:hover {
-  @apply shadow-lg border-zinc-300 -translate-y-0.5;
+  @apply shadow-md border-zinc-300;
 }
 
 /* Button enhancements */
-.btn-press { @apply active:scale-[0.97] transition-transform; }
+.btn-press { @apply active:scale-[0.98] transition-transform; }
 
 /* Section backgrounds */
-.section-alt { @apply bg-zinc-50/80; }
+.section-alt { @apply bg-zinc-50; }
 
 /* Input focus enhancement */
 .input-focus {
-  @apply transition-all duration-200 border-zinc-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+  @apply transition-all duration-200 border-zinc-300 focus:border-slate-500 focus:ring-2 focus:ring-slate-500/20;
 }
 
 /* Typography */
 .heading-gradient {
-  @apply bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-900 bg-clip-text text-transparent;
+  @apply text-zinc-900;
 }
 
 /* Badge styles */
-.badge-blue { @apply bg-blue-50 text-blue-700 border border-blue-200; }
-.badge-green { @apply bg-emerald-50 text-emerald-700 border border-emerald-200; }
-.badge-amber { @apply bg-amber-50 text-amber-700 border border-amber-200; }
-.badge-red { @apply bg-red-50 text-red-700 border border-red-200; }
+.badge-blue { @apply bg-zinc-100 text-zinc-700 border border-zinc-200; }
+.badge-green { @apply bg-zinc-100 text-zinc-700 border border-zinc-200; }
+.badge-amber { @apply bg-zinc-100 text-zinc-700 border border-zinc-200; }
+.badge-red { @apply bg-zinc-100 text-zinc-700 border border-zinc-200; }
 
 /* Skeleton loading */
 .skeleton {
