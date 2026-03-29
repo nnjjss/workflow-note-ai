@@ -135,6 +135,7 @@ interface InputPanelProps {
   setMetadata: (metadata: { team: string; project: string; attendees: string; date: string }) => void
   onGenerate: () => void
   loading: boolean
+  forceExpandMeta?: boolean
 }
 
 export default function InputPanel({
@@ -148,6 +149,7 @@ export default function InputPanel({
   setMetadata,
   onGenerate,
   loading,
+  forceExpandMeta,
 }: InputPanelProps) {
   const [showMeta, setShowMeta] = useState(false)
   const [detectedType, setDetectedType] = useState<DocType | null>(null)
@@ -177,6 +179,13 @@ export default function InputPanel({
   useEffect(() => {
     setDetectedType(null)
   }, [docType])
+
+  // Expand metadata section when forced externally
+  useEffect(() => {
+    if (forceExpandMeta) {
+      setShowMeta(true)
+    }
+  }, [forceExpandMeta])
 
   const applyTemplate = (template: typeof EXAMPLE_TEMPLATES[number]) => {
     setDocType(template.docType)

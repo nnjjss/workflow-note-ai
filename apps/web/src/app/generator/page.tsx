@@ -9,6 +9,7 @@ import { generateDocument, generateDocumentStream, saveDocument, getDocument } f
 import { DocType, GenerateResponse } from "@/lib/types"
 import { getOrCreateDemoUser } from "@/lib/auth"
 import { useToast } from "@/components/ui/Toast"
+import SampleScenarios from "@/components/generator/SampleScenarios"
 import { Sparkles, Loader2, ArrowDown, AlertCircle } from "lucide-react"
 
 function GeneratorContent() {
@@ -33,6 +34,7 @@ function GeneratorContent() {
   const [streamingText, setStreamingText] = useState("")
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showScrollButton, setShowScrollButton] = useState(false)
+  const [expandMeta, setExpandMeta] = useState(false)
 
   const loadDocument = useCallback(async (id: string) => {
     try {
@@ -208,6 +210,19 @@ function GeneratorContent() {
     setMetadata({ team: "마케팅팀", project: "Q2 캠페인", attendees: "김팀장, 이대리, 박사원", date: "2026-03-27" })
   }
 
+  const handleSelectScenario = (scenario: {
+    type: "meeting_note" | "weekly_report" | "daily_log"
+    title: string
+    content: string
+    metadata: { team: string; project: string; attendees: string; date: string }
+  }) => {
+    setDocType(scenario.type)
+    setTitle(scenario.title)
+    setContent(scenario.content)
+    setMetadata(scenario.metadata)
+    setExpandMeta(true)
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       {/* Onboarding Modal */}
@@ -258,6 +273,7 @@ function GeneratorContent() {
             setMetadata={setMetadata}
             onGenerate={handleGenerate}
             loading={loading}
+            forceExpandMeta={expandMeta}
           />
 
           {/* Mobile: scroll to result button */}
@@ -272,28 +288,34 @@ function GeneratorContent() {
           )}
         </div>
 
-        {/* Right: Result */}
+        {/* Right: Result or Sample Scenarios */}
         <div ref={resultRef} className="animate-fade-in stagger-2 scroll-mt-20">
-          {/* Visual separator on mobile */}
-          {(result || loading) && (
-            <div className="lg:hidden mb-4 border-t-2 border-blue-200 pt-4">
-              <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">생성 결과</p>
-            </div>
-          )}
+          {!result && !loading && !content.trim() ? (
+            <SampleScenarios onSelect={handleSelectScenario} />
+          ) : (
+            <>
+              {/* Visual separator on mobile */}
+              {(result || loading) && (
+                <div className="lg:hidden mb-4 border-t-2 border-blue-200 pt-4">
+                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">생성 결과</p>
+                </div>
+              )}
 
-          {/* Streaming live preview */}
-          {useStreaming && loading && streamingText && (
-            <div className="card-elevated mb-4 p-4 animate-fade-in">
-              <div className="mb-2 flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                <span className="text-sm font-medium text-zinc-600">AI 생성 중...</span>
-              </div>
-              <pre className="max-h-[400px] overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-zinc-50 p-4 font-mono text-sm text-zinc-700">
-                {streamingText}
-              </pre>
-            </div>
+              {/* Streaming live preview */}
+              {useStreaming && loading && streamingText && (
+                <div className="card-elevated mb-4 p-4 animate-fade-in">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                    <span className="text-sm font-medium text-zinc-600">AI 생성 중...</span>
+                  </div>
+                  <pre className="max-h-[400px] overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-zinc-50 p-4 font-mono text-sm text-zinc-700">
+                    {streamingText}
+                  </pre>
+                </div>
+              )}
+              <ResultPanel result={result} loading={loading && !useStreaming} />
+            </>
           )}
-          <ResultPanel result={result} loading={loading && !useStreaming} />
         </div>
       </div>
     </div>

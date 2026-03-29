@@ -1,5 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { SampleScenarioCondensed, SCENARIOS } from "@/components/generator/SampleScenarios"
 import {
   PenLine,
   Sparkles,
@@ -182,6 +185,32 @@ export default function Home() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Real Examples */}
+      <section className="px-4 py-20">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="mb-2 text-center text-xs font-semibold uppercase tracking-widest text-blue-600">
+            Real Examples
+          </h2>
+          <p className="mb-10 text-center text-lg font-bold text-zinc-900">
+            AI가 실제로 생성하는 결과물을 확인해보세요
+          </p>
+          <div className="space-y-4">
+            {SCENARIOS.map((scenario, index) => (
+              <div key={scenario.id} className={`animate-slide-up stagger-${index + 1}`}>
+                <SampleScenarioCondensed scenario={scenario} />
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/generator">
+              <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl text-white px-8 py-3 rounded-xl btn-press text-base transition-all duration-200">
+                직접 체험하기
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
