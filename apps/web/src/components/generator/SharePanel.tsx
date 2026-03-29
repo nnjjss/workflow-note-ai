@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { GenerateResponse } from "@/lib/types"
 import { shareToSlack, shareToEmail } from "@/lib/api"
-import { Copy, Mail, MessageSquare, CheckCircle, AlertCircle, Loader2, Download, FileText } from "lucide-react"
+import { useToast } from "@/components/ui/Toast"
+import { Copy, Mail, MessageSquare, CheckCircle, Loader2, Download, FileText } from "lucide-react"
 
 interface SharePanelProps {
   result: GenerateResponse
@@ -170,17 +171,16 @@ function downloadMarkdown(content: string, filename: string) {
 const SLACK_WEBHOOK_KEY = "workflow-note-ai-slack-webhook"
 
 export default function SharePanel({ result, title }: SharePanelProps) {
+  const { toast } = useToast()
   const [copied, setCopied] = useState<string | null>(null)
 
   // Slack state
   const [webhookUrl, setWebhookUrl] = useState("")
   const [slackLoading, setSlackLoading] = useState(false)
-  const [slackStatus, setSlackStatus] = useState<{ type: "success" | "error"; message: string } | null>(null)
 
   // Email state
   const [toEmail, setToEmail] = useState("")
   const [emailLoading, setEmailLoading] = useState(false)
-  const [emailStatus, setEmailStatus] = useState<{ type: "success" | "error"; message: string } | null>(null)
 
   useEffect(() => {
     const saved = localStorage.getItem(SLACK_WEBHOOK_KEY)
@@ -207,7 +207,6 @@ export default function SharePanel({ result, title }: SharePanelProps) {
   const handleSlackSend = async () => {
     if (!webhookUrl.trim()) return
     setSlackLoading(true)
-    setSlackStatus(null)
 
     localStorage.setItem(SLACK_WEBHOOK_KEY, webhookUrl.trim())
 
@@ -226,12 +225,9 @@ export default function SharePanel({ result, title }: SharePanelProps) {
         slack_text: result.share_summary_slack || formatSlack(result),
         action_items: actionItems,
       })
-      setSlackStatus({ type: "success", message: res.message || "슬랙으로 전송되었습니다" })
+      toast(res.message || "슬랙으로 전송되었습니다", "success")
     } catch (err) {
-      setSlackStatus({
-        type: "error",
-        message: err instanceof Error ? err.message : "슬랙 발송에 실패했습니다",
-      })
+      toast(err instanceof Error ? err.message : "슬랙 발송에 실패했습니다", "error")
     } finally {
       setSlackLoading(false)
     }
@@ -240,7 +236,6 @@ export default function SharePanel({ result, title }: SharePanelProps) {
   const handleEmailSend = async () => {
     if (!toEmail.trim()) return
     setEmailLoading(true)
-    setEmailStatus(null)
 
     try {
       const actionItems = result.action_items.map((a) => ({
@@ -256,12 +251,9 @@ export default function SharePanel({ result, title }: SharePanelProps) {
         email_body: result.share_summary_email || formatFull(result),
         action_items: actionItems,
       })
-      setEmailStatus({ type: "success", message: res.message || "이메일이 전송되었습니다" })
+      toast(res.message || "이메일이 전송되었습니다", "success")
     } catch (err) {
-      setEmailStatus({
-        type: "error",
-        message: err instanceof Error ? err.message : "이메일 발송에 실패했습니다",
-      })
+      toast(err instanceof Error ? err.message : "이메일 발송에 실패했습니다", "error")
     } finally {
       setEmailLoading(false)
     }
@@ -373,22 +365,6 @@ export default function SharePanel({ result, title }: SharePanelProps) {
               </>
             )}
           </Button>
-          {slackStatus && (
-            <div
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${
-                slackStatus.type === "success"
-                  ? "badge-green"
-                  : "badge-red"
-              }`}
-            >
-              {slackStatus.type === "success" ? (
-                <CheckCircle className="h-3.5 w-3.5" />
-              ) : (
-                <AlertCircle className="h-3.5 w-3.5" />
-              )}
-              {slackStatus.message}
-            </div>
-          )}
         </div>
       </TabsContent>
 
@@ -423,22 +399,6 @@ export default function SharePanel({ result, title }: SharePanelProps) {
               </>
             )}
           </Button>
-          {emailStatus && (
-            <div
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${
-                emailStatus.type === "success"
-                  ? "badge-green"
-                  : "badge-red"
-              }`}
-            >
-              {emailStatus.type === "success" ? (
-                <CheckCircle className="h-3.5 w-3.5" />
-              ) : (
-                <AlertCircle className="h-3.5 w-3.5" />
-              )}
-              {emailStatus.message}
-            </div>
-          )}
         </div>
       </TabsContent>
 

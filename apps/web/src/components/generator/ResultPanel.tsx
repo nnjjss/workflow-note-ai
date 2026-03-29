@@ -14,25 +14,38 @@ interface ResultPanelProps {
 export default function ResultPanel({ result, loading }: ResultPanelProps) {
   if (loading) {
     return (
-      <div className="card-base p-6">
-        <div className="min-h-[300px] space-y-6">
-          {/* Skeleton title */}
-          <div className="space-y-3">
-            <div className="skeleton h-6 w-3/4" />
-            <div className="skeleton h-4 w-1/2" />
-          </div>
-          {/* Skeleton content blocks */}
-          <div className="space-y-3">
-            <div className="skeleton h-4 w-full" />
-            <div className="skeleton h-4 w-5/6" />
-            <div className="skeleton h-4 w-4/6" />
-          </div>
-          <div className="space-y-3">
-            <div className="skeleton h-4 w-full" />
-            <div className="skeleton h-4 w-3/4" />
-          </div>
-          <p className="text-center text-sm text-zinc-400 pt-4">문서를 생성하고 있습니다...</p>
+      <div className="space-y-5 animate-fade-in">
+        {/* Title skeleton */}
+        <div className="card-base p-5">
+          <div className="skeleton h-5 w-48 mb-2" />
+          <div className="skeleton h-4 w-32" />
         </div>
+        {/* Summary skeleton */}
+        <div className="card-base p-5">
+          <div className="skeleton h-4 w-24 mb-3" />
+          <div className="skeleton h-3 w-full mb-2" />
+          <div className="skeleton h-3 w-4/5 mb-2" />
+          <div className="skeleton h-3 w-3/5" />
+        </div>
+        {/* Key points skeleton */}
+        <div className="card-base p-5">
+          <div className="skeleton h-4 w-28 mb-3" />
+          <div className="space-y-2">
+            <div className="skeleton h-3 w-full" />
+            <div className="skeleton h-3 w-5/6" />
+            <div className="skeleton h-3 w-4/6" />
+          </div>
+        </div>
+        {/* Action items skeleton */}
+        <div className="card-base p-5">
+          <div className="skeleton h-4 w-28 mb-3" />
+          <div className="space-y-2">
+            <div className="skeleton h-8 w-full" />
+            <div className="skeleton h-8 w-full" />
+            <div className="skeleton h-8 w-4/5" />
+          </div>
+        </div>
+        <p className="text-center text-sm text-zinc-400 pt-2">문서를 생성하고 있습니다...</p>
       </div>
     )
   }

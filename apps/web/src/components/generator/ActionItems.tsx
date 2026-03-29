@@ -24,7 +24,9 @@ export default function ActionItems({ items }: ActionItemsProps) {
   return (
     <div className="card-base p-5 animate-fade-in">
       <h3 className="mb-3 text-sm font-bold text-zinc-800 border-l-3 border-blue-500 pl-3">액션아이템</h3>
-      <div className="overflow-x-auto rounded-lg border border-zinc-200">
+
+      {/* Desktop: table */}
+      <div className="hidden md:block overflow-x-auto rounded-lg border border-zinc-200">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-zinc-50 text-left">
@@ -51,6 +53,26 @@ export default function ActionItems({ items }: ActionItemsProps) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile: card layout */}
+      <div className="md:hidden space-y-2">
+        {items.map((item, i) => (
+          <div key={i} className="card-base p-3">
+            <div className="flex items-start justify-between gap-2">
+              <span className="font-medium text-sm text-zinc-700">{item.task}</span>
+              <span
+                className={`shrink-0 ${PRIORITY_STYLES[item.priority] || PRIORITY_STYLES.low}`}
+              >
+                {PRIORITY_LABELS[item.priority] || item.priority}
+              </span>
+            </div>
+            <div className="mt-1.5 flex gap-3 text-xs text-zinc-500">
+              <span>{item.assignee || "-"}</span>
+              <span>{item.due_date || "-"}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

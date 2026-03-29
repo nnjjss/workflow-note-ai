@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getDocuments, duplicateDocument, deleteDocument } from "@/lib/api"
 import { DocumentResponse } from "@/lib/types"
+import { useToast } from "@/components/ui/Toast"
 import {
   History,
   Search,
@@ -57,6 +58,7 @@ function formatDate(dateStr: string): string {
 
 export default function HistoryPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [documents, setDocuments] = useState<DocumentResponse[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -107,8 +109,9 @@ export default function HistoryPage() {
     try {
       await duplicateDocument(id)
       await fetchDocuments()
+      toast("문서가 복제되었습니다", "success")
     } catch {
-      // silent fail
+      toast("문서 복제에 실패했습니다", "error")
     } finally {
       setActionLoading(null)
     }
@@ -120,8 +123,9 @@ export default function HistoryPage() {
     try {
       await deleteDocument(id)
       await fetchDocuments()
+      toast("문서가 삭제되었습니다", "success")
     } catch {
-      // silent fail
+      toast("문서 삭제에 실패했습니다", "error")
     } finally {
       setActionLoading(null)
     }

@@ -1,17 +1,21 @@
 "use client"
 
-import { Suspense, useState, useEffect, useCallback } from "react"
+import { Suspense, useState, useEffect, useCallback, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import InputPanel from "@/components/generator/InputPanel"
 import ResultPanel from "@/components/generator/ResultPanel"
+import OnboardingModal from "@/components/OnboardingModal"
 import { generateDocument, generateDocumentStream, saveDocument, getDocument } from "@/lib/api"
 import { DocType, GenerateResponse } from "@/lib/types"
 import { getOrCreateDemoUser } from "@/lib/auth"
-import { Sparkles, AlertCircle, Loader2 } from "lucide-react"
+import { useToast } from "@/components/ui/Toast"
+import { Sparkles, Loader2, ArrowDown, AlertCircle } from "lucide-react"
 
 function GeneratorContent() {
   const searchParams = useSearchParams()
   const docId = searchParams.get("id")
+  const { toast } = useToast()
+  const resultRef = useRef<HTMLDivElement>(null)
 
   const [docType, setDocType] = useState<DocType>("meeting_note")
   const [title, setTitle] = useState("")
@@ -27,6 +31,8 @@ function GeneratorContent() {
   const [error, setError] = useState("")
   const [useStreaming, setUseStreaming] = useState(true)
   const [streamingText, setStreamingText] = useState("")
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [showScrollButton, setShowScrollButton] = useState(false)
 
   const loadDocument = useCallback(async (id: string) => {
     try {
@@ -52,6 +58,9 @@ function GeneratorContent() {
 
   useEffect(() => {
     getOrCreateDemoUser()
+    if (typeof window !== "undefined" && !localStorage.getItem("workflow_note_onboarded")) {
+      setShowOnboarding(true)
+    }
   }, [])
 
   useEffect(() => {
@@ -81,7 +90,7 @@ function GeneratorContent() {
         e.preventDefault()
         if (result) {
           const text = `# ${result.title}\n\n${result.summary}\n\n${result.key_points.map((k: string) => `- ${k}`).join("\n")}`
-          navigator.clipboard.writeText(text).catch(() => {})
+          navigator.clipboard.writeText(text).then(() => toast("클립보드에 복사되었습니다", "success")).catch(() => {})
         }
         return
       }
@@ -93,7 +102,7 @@ function GeneratorContent() {
     }
     window.addEventListener("keydown", handler)
     return () => window.removeEventListener("keydown", handler)
-  }, [content, loading, result])
+  }, [content, loading, result, toast])
 
   const autoSave = async (response: GenerateResponse) => {
     try {
@@ -110,8 +119,9 @@ function GeneratorContent() {
         generated_output: response as unknown as Record<string, unknown>,
         short_summary: response.summary,
       })
+      toast("자동 저장 완료", "success")
     } catch {
-      /* silent fail for auto-save */
+      toast("자동 저장에 실패했습니다", "error")
     }
   }
 
@@ -119,9 +129,9 @@ function GeneratorContent() {
     if (!content.trim()) return
 
     setLoading(true)
-    setError("")
     setResult(null)
     setStreamingText("")
+    setShowScrollButton(false)
 
     const reqPayload = {
       doc_type: docType,
@@ -144,10 +154,12 @@ function GeneratorContent() {
         (response) => {
           setResult(response)
           setLoading(false)
+          setShowScrollButton(true)
+          toast("문서가 생성되었습니다", "success")
           autoSave(response)
         },
         (errMsg) => {
-          setError(errMsg || "생성에 실패했습니다. 다시 시도해주세요.")
+          toast(errMsg || "생성에 실패했습니다. 다시 시도해주세요.", "error")
           setLoading(false)
         },
       )
@@ -157,17 +169,54 @@ function GeneratorContent() {
       try {
         const response = await generateDocument(reqPayload)
         setResult(response)
+        setShowScrollButton(true)
+        toast("문서가 생성되었습니다", "success")
         autoSave(response)
       } catch (err) {
-        setError(err instanceof Error ? err.message : "생성에 실패했습니다. 다시 시도해주세요.")
+        toast(err instanceof Error ? err.message : "생성에 실패했습니다. 다시 시도해주세요.", "error")
       } finally {
         setLoading(false)
       }
     }
   }
 
+  const scrollToResult = () => {
+    resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
+  const handleStartWithExample = () => {
+    // Load the first example template (meeting note)
+    setDocType("meeting_note")
+    setTitle("마케팅 팀 주간 회의")
+    setContent(`참석자: 김팀장, 이대리, 박사원
+일시: 2026년 3월 27일 오후 2시
+장소: 회의실 A
+
+1. Q2 마케팅 캠페인 진행 상황 공유
+- SNS 광고 성과: CTR 2.3%, 전주 대비 0.5%p 상승
+- 인플루언서 콜라보 3건 확정 (4월 첫째주 시작)
+- 랜딩페이지 A/B 테스트 결과: 변형 B가 전환율 15% 높음
+
+2. 신규 프로모션 기획
+- 5월 가정의 달 프로모션 아이디어 브레인스토밍
+- 예산: 500만원 내외로 기획
+- 김팀장: 다음 회의까지 프로모션 기획안 초안 작성
+
+3. 이슈
+- 광고 소재 제작 일정 지연 (디자이너 1명 퇴사)
+- 대체 인력 채용 중, 4월 초 합류 예정`)
+    setMetadata({ team: "마케팅팀", project: "Q2 캠페인", attendees: "김팀장, 이대리, 박사원", date: "2026-03-27" })
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        open={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onStartWithExample={handleStartWithExample}
+      />
+
       {/* Page Header */}
       <div className="mb-6 animate-fade-in">
         <div className="flex items-center gap-2.5">
@@ -210,16 +259,28 @@ function GeneratorContent() {
             onGenerate={handleGenerate}
             loading={loading}
           />
-          {error && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg badge-red px-4 py-3 animate-fade-in">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <p className="text-sm font-medium">{error}</p>
-            </div>
+
+          {/* Mobile: scroll to result button */}
+          {showScrollButton && result && (
+            <button
+              onClick={scrollToResult}
+              className="mt-3 w-full lg:hidden flex items-center justify-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-4 py-2.5 text-sm font-medium text-blue-700 btn-press transition-all hover:bg-blue-100 animate-fade-in"
+            >
+              <ArrowDown className="h-4 w-4" />
+              결과 보기
+            </button>
           )}
         </div>
 
         {/* Right: Result */}
-        <div className="animate-fade-in stagger-2">
+        <div ref={resultRef} className="animate-fade-in stagger-2 scroll-mt-20">
+          {/* Visual separator on mobile */}
+          {(result || loading) && (
+            <div className="lg:hidden mb-4 border-t-2 border-blue-200 pt-4">
+              <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">생성 결과</p>
+            </div>
+          )}
+
           {/* Streaming live preview */}
           {useStreaming && loading && streamingText && (
             <div className="card-elevated mb-4 p-4 animate-fade-in">

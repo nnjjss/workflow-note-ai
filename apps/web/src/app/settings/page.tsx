@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { getOrCreateDemoUser, setUser } from "@/lib/auth"
 import type { User } from "@/lib/auth"
+import { useToast } from "@/components/ui/Toast"
 import {
   Settings,
   User as UserIcon,
   Share2,
   Database,
-  CheckCircle,
   Trash2,
   Save,
   Loader2,
@@ -21,11 +21,10 @@ const SLACK_WEBHOOK_KEY = "workflow_note_slack_webhook"
 
 export default function SettingsPage() {
   const [user, setUserState] = useState<User | null>(null)
+  const { toast } = useToast()
   const [name, setName] = useState("")
   const [slackWebhook, setSlackWebhook] = useState("")
   const [docCount, setDocCount] = useState(0)
-  const [saved, setSaved] = useState(false)
-  const [slackSaved, setSlackSaved] = useState(false)
   const [saving, setSaving] = useState(false)
   const [slackSaving, setSlackSaving] = useState(false)
 
@@ -59,21 +58,15 @@ export default function SettingsPage() {
     const updated = { ...user, name: name.trim() || "사용자" }
     setUser(updated)
     setUserState(updated)
-    setSaved(true)
-    setTimeout(() => {
-      setSaved(false)
-      setSaving(false)
-    }, 2000)
+    toast("이름이 저장되었습니다", "success")
+    setTimeout(() => setSaving(false), 500)
   }
 
   const handleSaveSlack = () => {
     setSlackSaving(true)
     localStorage.setItem(SLACK_WEBHOOK_KEY, slackWebhook)
-    setSlackSaved(true)
-    setTimeout(() => {
-      setSlackSaved(false)
-      setSlackSaving(false)
-    }, 2000)
+    toast("Slack Webhook URL이 저장되었습니다", "success")
+    setTimeout(() => setSlackSaving(false), 500)
   }
 
   const handleClearAll = () => {
@@ -88,6 +81,7 @@ export default function SettingsPage() {
     setUserState(u)
     setName(u.name)
     setSlackWebhook("")
+    toast("모든 데이터가 삭제되었습니다", "success")
   }
 
   if (!user) return null
@@ -131,12 +125,7 @@ export default function SettingsPage() {
                   disabled={saving}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
                 >
-                  {saved ? (
-                    <>
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      저장됨
-                    </>
-                  ) : saving ? (
+                  {saving ? (
                     <>
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       저장 중
@@ -186,12 +175,7 @@ export default function SettingsPage() {
                   disabled={slackSaving}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg btn-press gap-1.5"
                 >
-                  {slackSaved ? (
-                    <>
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      저장됨
-                    </>
-                  ) : slackSaving ? (
+                  {slackSaving ? (
                     <>
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       저장 중

@@ -34,6 +34,8 @@ export interface GenerateResponse {
   // weekly_report specific
   completed_work?: string[]
   next_week_plan?: string[]
+  early_warnings?: string[]
+  key_kpi_changes?: string[]
   // daily_log specific
   today_work?: string[]
   outcomes?: string[]
