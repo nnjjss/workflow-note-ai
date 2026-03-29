@@ -82,6 +82,21 @@ class AnthropicProvider(AIProvider):
     def __init__(self):
         self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
+    def generate_document_stream(self, doc_type: str, content: str, metadata: dict):
+        """Stream document generation section by section via SSE."""
+        system_prompt, user_template = PROMPT_MAP.get(doc_type, PROMPT_MAP["meeting_note"])
+        meta_str = _build_metadata(metadata)
+        user_prompt = user_template.format(metadata=meta_str, content=content)
+
+        with self.client.messages.stream(
+            model=MODEL,
+            max_tokens=4096,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+        ) as stream:
+            for text in stream.text_stream:
+                yield text
+
     def generate_document(self, doc_type: str, content: str, metadata: dict) -> dict:
         system_prompt, user_template = PROMPT_MAP[doc_type]
         meta_str = _build_metadata(metadata)

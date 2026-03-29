@@ -14,6 +14,48 @@ export async function generateDocument(req: GenerateRequest): Promise<GenerateRe
   return res.json()
 }
 
+export async function generateDocumentStream(
+  req: GenerateRequest,
+  onChunk: (text: string) => void,
+  onComplete: (result: GenerateResponse) => void,
+  onError: (error: string) => void,
+): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/generate/stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  })
+  if (!res.ok) { onError("생성에 실패했습니다"); return }
+
+  const reader = res.body?.getReader()
+  if (!reader) { onError("스트리밍을 시작할 수 없습니다"); return }
+
+  const decoder = new TextDecoder()
+  let buffer = ""
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    buffer += decoder.decode(value, { stream: true })
+    const lines = buffer.split("\n")
+    buffer = lines.pop() || ""
+
+    for (const line of lines) {
+      if (!line.startsWith("data: ")) continue
+      const data = line.slice(6)
+      if (data === "[DONE]") return
+
+      try {
+        const parsed = JSON.parse(data)
+        if (parsed.type === "chunk") onChunk(parsed.text)
+        if (parsed.type === "complete") onComplete(parsed.result as GenerateResponse)
+        if (parsed.type === "error") onError(parsed.message)
+      } catch { /* skip malformed SSE lines */ }
+    }
+  }
+}
+
 export async function rewriteSection(req: RewriteRequest): Promise<RewriteResponse> {
   const res = await fetch(`${API_BASE}/api/rewrite`, {
     method: "POST",
@@ -61,7 +103,7 @@ export async function shareToEmail(data: {
 
 export async function rewriteSectionContent(data: {
   content: string
-  mode: "shorter" | "formal" | "manager_tone" | "team_tone"
+  mode: "shorter" | "formal" | "manager_tone" | "team_tone" | "regenerate"
   doc_type?: string
 }): Promise<{ rewritten: string }> {
   const res = await fetch(`${API_BASE}/api/rewrite`, {

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { rewriteSectionContent } from "@/lib/api"
-import { Loader2, Undo2, Pencil } from "lucide-react"
+import { Loader2, Undo2, Pencil, RefreshCw } from "lucide-react"
 
 interface SectionCardProps {
   title: string
@@ -53,6 +53,23 @@ export default function SectionCard({
     setEditing(false)
   }
 
+  const handleRegenerate = async () => {
+    setRewritingMode("regenerate")
+    try {
+      const content = items.join("\n")
+      const res = await rewriteSectionContent({ content, mode: "regenerate", doc_type: docType })
+      const newItems = res.rewritten.split("\n").filter((line) => line.trim())
+      setPreviousItems(items)
+      if (onUpdate) {
+        onUpdate(newItems)
+      }
+    } catch {
+      // silent fail
+    } finally {
+      setRewritingMode(null)
+    }
+  }
+
   const handleRewrite = async (mode: "shorter" | "formal" | "manager_tone" | "team_tone") => {
     setRewritingMode(mode)
     try {
@@ -91,6 +108,22 @@ export default function SectionCard({
             >
               <Undo2 className="h-3.5 w-3.5" />
               되돌리기
+            </Button>
+          )}
+          {rewritable && !editing && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRegenerate}
+              disabled={rewritingMode !== null}
+              className="h-7 text-xs text-zinc-400 hover:text-blue-600 gap-1"
+            >
+              {rewritingMode === "regenerate" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3.5 w-3.5" />
+              )}
+              다시 생성
             </Button>
           )}
           {editable && !editing && (

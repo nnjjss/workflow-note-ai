@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { GenerateResponse } from "@/lib/types"
 import { shareToSlack, shareToEmail } from "@/lib/api"
-import { Copy, Mail, MessageSquare, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import { Copy, Mail, MessageSquare, CheckCircle, AlertCircle, Loader2, Download, FileText } from "lucide-react"
 
 interface SharePanelProps {
   result: GenerateResponse
@@ -114,6 +114,57 @@ function formatSlack(result: GenerateResponse): string {
   }
 
   return lines.join("\n")
+}
+
+function resultToMarkdown(result: GenerateResponse, title: string): string {
+  const typeLabel = { meeting_note: "회의록", weekly_report: "주간보고", daily_log: "업무일지" }
+  let md = `# ${title}\n\n`
+  md += `> ${typeLabel[result.doc_type as keyof typeof typeLabel] || result.doc_type}\n\n`
+
+  if (result.summary) md += `## 핵심 요약\n${result.summary}\n\n`
+
+  // Type-specific sections
+  if (result.doc_type === "meeting_note") {
+    if (result.agenda?.length) md += `## 안건\n${result.agenda.map(a => `- ${a}`).join('\n')}\n\n`
+    if (result.discussion?.length) md += `## 논의사항\n${result.discussion.map(d => `- ${d}`).join('\n')}\n\n`
+  }
+  if (result.doc_type === "weekly_report") {
+    if (result.completed_work?.length) md += `## 금주 완료\n${result.completed_work.map(w => `- ${w}`).join('\n')}\n\n`
+    if (result.next_week_plan?.length) md += `## 차주 계획\n${result.next_week_plan.map(p => `- ${p}`).join('\n')}\n\n`
+  }
+  if (result.doc_type === "daily_log") {
+    if (result.today_work?.length) md += `## 오늘 업무\n${result.today_work.map(w => `- ${w}`).join('\n')}\n\n`
+    if (result.outcomes?.length) md += `## 성과\n${result.outcomes.map(o => `- ${o}`).join('\n')}\n\n`
+    if (result.blockers?.length) md += `## 장애요소\n${result.blockers.map(b => `- ${b}`).join('\n')}\n\n`
+  }
+
+  // Common sections
+  if (result.key_points?.length) md += `## 주요 포인트\n${result.key_points.map(k => `- ${k}`).join('\n')}\n\n`
+  if (result.decisions?.length) md += `## 결정사항\n${result.decisions.map(d => `- ${d}`).join('\n')}\n\n`
+
+  if (result.action_items?.length) {
+    md += `## 액션아이템\n\n| 업무 | 담당자 | 마감일 | 우선순위 |\n|------|--------|--------|----------|\n`
+    result.action_items.forEach(a => {
+      md += `| ${a.task} | ${a.assignee || "-"} | ${a.due_date || "-"} | ${a.priority} |\n`
+    })
+    md += '\n'
+  }
+
+  if (result.risks?.length) md += `## 리스크/이슈\n${result.risks.map(r => `- ⚠️ ${r}`).join('\n')}\n\n`
+  if (result.next_steps?.length) md += `## 다음 단계\n${result.next_steps.map(n => `- ${n}`).join('\n')}\n\n`
+
+  md += `---\n*WorkFlow Note AI로 생성됨*\n`
+  return md
+}
+
+function downloadMarkdown(content: string, filename: string) {
+  const blob = new Blob([content], { type: "text/markdown" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `${filename}.md`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 const SLACK_WEBHOOK_KEY = "workflow-note-ai-slack-webhook"
@@ -230,6 +281,10 @@ export default function SharePanel({ result, title }: SharePanelProps) {
         <TabsTrigger value="email" className="gap-1.5">
           <Mail className="h-3.5 w-3.5" />
           이메일
+        </TabsTrigger>
+        <TabsTrigger value="export" className="gap-1.5">
+          <Download className="h-3.5 w-3.5" />
+          내보내기
         </TabsTrigger>
       </TabsList>
 
@@ -384,6 +439,44 @@ export default function SharePanel({ result, title }: SharePanelProps) {
               {emailStatus.message}
             </div>
           )}
+        </div>
+      </TabsContent>
+
+      {/* 내보내기 탭 */}
+      <TabsContent value="export">
+        <div className="flex flex-wrap gap-2 pt-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const md = resultToMarkdown(result, title || result.title)
+              const filename = (title || result.title || "document").replace(/[^a-zA-Z0-9가-힣_-]/g, "_")
+              downloadMarkdown(md, filename)
+            }}
+            className="border-zinc-200 text-zinc-600 gap-1.5"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            마크다운 다운로드
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const md = resultToMarkdown(result, title || result.title)
+              copyToClipboard(md, "markdown")
+            }}
+            className="border-zinc-200 text-zinc-600 gap-1.5"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            {copied === "markdown" ? (
+              <span className="flex items-center gap-1 text-emerald-600">
+                <CheckCircle className="h-3.5 w-3.5" />
+                복사됨
+              </span>
+            ) : (
+              "마크다운 복사"
+            )}
+          </Button>
         </div>
       </TabsContent>
     </Tabs>
